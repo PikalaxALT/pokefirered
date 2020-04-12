@@ -300,7 +300,7 @@ static void Menu_RedrawCursor(u8 oldPos, u8 newPos)
     width = GetMenuCursorDimensionByFont(sMenu.fontId, 0);
     height = GetMenuCursorDimensionByFont(sMenu.fontId, 1);
     FillWindowPixelRect(sMenu.windowId, 1, sMenu.left, sMenu.optionHeight * oldPos + sMenu.top, width, height);
-    AddTextPrinterParameterized(sMenu.windowId, sMenu.fontId, gText_SelectorArrow2, sMenu.left, sMenu.optionHeight * newPos + sMenu.top, 0, 0);
+    AddTextPrinterParameterized(sMenu.windowId, sMenu.fontId, gText_SelectorArrow2, sMenu.left, sMenu.optionHeight * newPos + sMenu.top, 0, NULL);
 }
 
 u8 Menu_MoveCursor(s8 cursorDelta)
@@ -456,7 +456,7 @@ void PrintTextArray(u8 windowId, u8 fontId, u8 left, u8 top, u8 lineHeight, u8 i
     u8 i;
 
     for (i = 0; i < itemCount; i++)
-        AddTextPrinterParameterized(windowId, fontId, strs[i].text, left, (lineHeight * i) + top, 0xFF, NULL);
+        AddTextPrinterParameterized(windowId, fontId, strs[i].text, left, (lineHeight * i) + top, TEXT_SPEED_FF, NULL);
     CopyWindowToVram(windowId, COPYWIN_GFX);
 }
 
@@ -465,7 +465,7 @@ void MultichoiceList_PrintItems(u8 windowId, u8 fontId, u8 left, u8 top, u8 line
     u8 i;
 
     for (i = 0; i < itemCount; i++)
-        AddTextPrinterParameterized5(windowId, fontId, strs[i].text, left, (lineHeight * i) + top, 0xFF, NULL, letterSpacing, lineSpacing);
+        AddTextPrinterParameterized5(windowId, fontId, strs[i].text, left, (lineHeight * i) + top, TEXT_SPEED_FF, NULL, letterSpacing, lineSpacing);
     CopyWindowToVram(windowId, COPYWIN_GFX);
 }
 
@@ -582,7 +582,7 @@ void MultichoiceGrid_PrintItems(u8 windowId, u8 fontId, u8 itemWidth, u8 itemHei
     yOffset = (16 - GetFontAttribute(fontId, FONTATTR_MAX_LETTER_HEIGHT)) / 2;
     for (i = 0; i < rows; ++i)
         for (j = 0; j < cols; ++j)
-            AddTextPrinterParameterized(windowId, fontId, strs[i * cols + j].text, itemWidth * j + width, yOffset + itemHeight * i, 0xFF, 0);
+            AddTextPrinterParameterized(windowId, fontId, strs[i * cols + j].text, itemWidth * j + width, yOffset + itemHeight * i, TEXT_SPEED_FF, NULL);
     CopyWindowToVram(windowId, COPYWIN_GFX);
 }
 
@@ -597,7 +597,7 @@ static void MultichoiceGrid_PrintItemsCustomOrder(u8 windowId, u8 fontId, u8 ite
     width = GetFontAttribute(fontId, FONTATTR_MAX_LETTER_WIDTH);
     for (i = 0; i < rows; ++i)
         for (j = 0; j < cols; ++j)
-            AddTextPrinterParameterized(windowId, fontId, strs[orderArray[i * cols + j]].text, itemWidth * j + width, itemHeight * i, 0xFF, 0);
+            AddTextPrinterParameterized(windowId, fontId, strs[orderArray[i * cols + j]].text, itemWidth * j + width, itemHeight * i, TEXT_SPEED_FF, NULL);
     CopyWindowToVram(windowId, COPYWIN_GFX);
 }
 
@@ -642,7 +642,7 @@ static void MultichoiceGrid_RedrawCursor(u8 oldCursorPos, u8 newCursorPos)
     FillWindowPixelRect(sMenu.windowId, PIXEL_FILL(1), xPos, yPos, cursorWidth, cursorHeight);
     xPos = (newCursorPos % sMenu.columns) * sMenu.optionWidth + sMenu.left;
     yPos = (newCursorPos / sMenu.columns) * sMenu.optionHeight + sMenu.top;
-    AddTextPrinterParameterized(sMenu.windowId, sMenu.fontId, gText_SelectorArrow2, xPos, yPos, 0, 0);
+    AddTextPrinterParameterized(sMenu.windowId, sMenu.fontId, gText_SelectorArrow2, xPos, yPos, 0, NULL);
 }
 
 static u8 MultichoiceGrid_MoveCursor(s8 deltaX, s8 deltaY)

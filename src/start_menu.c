@@ -254,7 +254,7 @@ static void DrawSafariZoneStatsWindow(void)
     ConvertIntToDecimalStringN(gStringVar2, 600, STR_CONV_MODE_RIGHT_ALIGN, 3);
     ConvertIntToDecimalStringN(gStringVar3, gNumSafariBalls, STR_CONV_MODE_RIGHT_ALIGN, 2);
     StringExpandPlaceholders(gStringVar4, gUnknown_84162A9);
-    AddTextPrinterParameterized(sSafariZoneStatsWindowId,2, gStringVar4, 4, 3, 0xFF, NULL);
+    AddTextPrinterParameterized(sSafariZoneStatsWindowId,2, gStringVar4, 4, 3, TEXT_SPEED_FF, NULL);
     CopyWindowToVram(sSafariZoneStatsWindowId, COPYWIN_GFX);
 }
 
@@ -280,7 +280,7 @@ static s8 PrintStartMenuItems(s8 *cursor_p, u8 nitems)
         else
         {
             StringExpandPlaceholders(gStringVar4, sStartMenuActionTable[sStartMenuOrder[i]].text);
-            AddTextPrinterParameterized(GetStartMenuWindowId(), 2, gStringVar4, 8, i * 15, 0xFF, NULL);
+            AddTextPrinterParameterized(GetStartMenuWindowId(), 2, gStringVar4, 8, i * 15, TEXT_SPEED_FF, NULL);
         }
         i++;
         if (i >= sNumStartMenuItems)
@@ -910,7 +910,7 @@ static void task50_after_link_battle_save(u8 taskId)
         {
         case 0:
             FillWindowPixelBuffer(0, PIXEL_FILL(1));
-            AddTextPrinterParameterized2(0, 2, gText_SavingDontTurnOffThePower2, 0xFF, NULL, 2, 1, 3);
+            AddTextPrinterParameterized2(0, 2, gText_SavingDontTurnOffThePower2, TEXT_SPEED_FF, NULL, TEXT_COLOR_DARK_GREY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GREY);
             DrawTextBorderOuter(0, 0x008, 0x0F);
             PutWindowTilemap(0);
             CopyWindowToVram(0, COPYWIN_BOTH);
@@ -962,25 +962,25 @@ static void PrintSaveStats(void)
     DrawStdFrameWithCustomTileAndPalette(sSaveStatsWindowId, FALSE, 0x21D, 0x0D);
     SaveStatToString(SAVE_STAT_LOCATION, gStringVar4, 8);
     x = (u32)(112 - GetStringWidth(2, gStringVar4, -1)) / 2;
-    AddTextPrinterParameterized3(sSaveStatsWindowId, 2, x, 0, sTextColor_LocationHeader, -1, gStringVar4);
+    AddTextPrinterParameterized3(sSaveStatsWindowId, 2, x, 0, sTextColor_LocationHeader, TEXT_SPEED_FF, gStringVar4);
     x = (u32)(112 - GetStringWidth(2, gStringVar4, -1)) / 2;
-    AddTextPrinterParameterized3(sSaveStatsWindowId, 0, 2, 14, sTextColor_StatName, -1, gSaveStatName_Player);
+    AddTextPrinterParameterized3(sSaveStatsWindowId, 0, 2, 14, sTextColor_StatName, TEXT_SPEED_FF, gSaveStatName_Player);
     SaveStatToString(SAVE_STAT_NAME, gStringVar4, 2);
     Menu_PrintFormatIntlPlayerName(sSaveStatsWindowId, gStringVar4, 60, 14);
-    AddTextPrinterParameterized3(sSaveStatsWindowId, 0, 2, 28, sTextColor_StatName, -1, gSaveStatName_Badges);
+    AddTextPrinterParameterized3(sSaveStatsWindowId, 0, 2, 28, sTextColor_StatName, TEXT_SPEED_FF, gSaveStatName_Badges);
     SaveStatToString(SAVE_STAT_BADGES, gStringVar4, 2);
-    AddTextPrinterParameterized3(sSaveStatsWindowId, 0, 60, 28, sTextColor_StatValue, -1, gStringVar4);
+    AddTextPrinterParameterized3(sSaveStatsWindowId, 0, 60, 28, sTextColor_StatValue, TEXT_SPEED_FF, gStringVar4);
     y = 42;
     if (FlagGet(FLAG_SYS_POKEDEX_GET) == TRUE)
     {
-        AddTextPrinterParameterized3(sSaveStatsWindowId, 0, 2, 42, sTextColor_StatName, -1, gSaveStatName_Pokedex);
+        AddTextPrinterParameterized3(sSaveStatsWindowId, 0, 2, 42, sTextColor_StatName, TEXT_SPEED_FF, gSaveStatName_Pokedex);
         SaveStatToString(SAVE_STAT_POKEDEX, gStringVar4, 2);
-        AddTextPrinterParameterized3(sSaveStatsWindowId, 0, 60, 42, sTextColor_StatValue, -1, gStringVar4);
+        AddTextPrinterParameterized3(sSaveStatsWindowId, 0, 60, 42, sTextColor_StatValue, TEXT_SPEED_FF, gStringVar4);
         y = 56;
     }
-    AddTextPrinterParameterized3(sSaveStatsWindowId, 0, 2, y, sTextColor_StatName, -1, gSaveStatName_Time);
+    AddTextPrinterParameterized3(sSaveStatsWindowId, 0, 2, y, sTextColor_StatName, TEXT_SPEED_FF, gSaveStatName_Time);
     SaveStatToString(SAVE_STAT_TIME, gStringVar4, 2);
-    AddTextPrinterParameterized3(sSaveStatsWindowId, 0, 60, y, sTextColor_StatValue, -1, gStringVar4);
+    AddTextPrinterParameterized3(sSaveStatsWindowId, 0, 60, y, sTextColor_StatValue, TEXT_SPEED_FF, gStringVar4);
     CopyWindowToVram(sSaveStatsWindowId, COPYWIN_GFX);
 }
 

@@ -828,15 +828,15 @@ static void MultiChoicePrintHelpDescription(u8 mcId)
     {
     case 39:
         FillWindowPixelBuffer(0, PIXEL_FILL(1));
-        AddTextPrinterParameterized2(0, 2, sDescriptionPtrs_CableClub_TradeBattleCancel[Menu_GetCursorPos()], 0, NULL, 2, 1, 3);
+        AddTextPrinterParameterized2(0, 2, sDescriptionPtrs_CableClub_TradeBattleCancel[Menu_GetCursorPos()], 0, NULL, TEXT_COLOR_DARK_GREY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GREY);
         break;
     case 47:
         FillWindowPixelBuffer(0, PIXEL_FILL(1));
-        AddTextPrinterParameterized2(0, 2, sDescriptionPtrs_WirelessCenter_TradeBattleCrushCancel[Menu_GetCursorPos()], 0, NULL, 2, 1, 3);
+        AddTextPrinterParameterized2(0, 2, sDescriptionPtrs_WirelessCenter_TradeBattleCrushCancel[Menu_GetCursorPos()], 0, NULL, TEXT_COLOR_DARK_GREY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GREY);
         break;
     case 50:
         FillWindowPixelBuffer(0, PIXEL_FILL(1));
-        AddTextPrinterParameterized2(0, 2, sDescriptionPtrs_WirelessCenter_TradeBattleCancel[Menu_GetCursorPos()], 0, NULL, 2, 1, 3);
+        AddTextPrinterParameterized2(0, 2, sDescriptionPtrs_WirelessCenter_TradeBattleCancel[Menu_GetCursorPos()], 0, NULL, TEXT_COLOR_DARK_GREY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GREY);
         break;
     }
 }
@@ -974,9 +974,9 @@ static void CreatePCMenuWindow(void)
         nitems = 5;
         windowId = CreateWindowFromRect(0, 0, windowWidth, 10);
         SetStdWindowBorderStyle(windowId, FALSE);
-        AddTextPrinterParameterized(windowId, 2, gText_ProfOakSPc, cursorWidth, 34, 0xFF, NULL);
-        AddTextPrinterParameterized(windowId, 2, gText_HallOfFame_2, cursorWidth, 50, 0xFF, NULL);
-        AddTextPrinterParameterized(windowId, 2, gText_LogOff, cursorWidth, 66, 0xFF, NULL);
+        AddTextPrinterParameterized(windowId, 2, gText_ProfOakSPc, cursorWidth, 34, TEXT_SPEED_FF, NULL);
+        AddTextPrinterParameterized(windowId, 2, gText_HallOfFame_2, cursorWidth, 50, TEXT_SPEED_FF, NULL);
+        AddTextPrinterParameterized(windowId, 2, gText_LogOff, cursorWidth, 66, TEXT_SPEED_FF, NULL);
     }
     else
     {
@@ -987,13 +987,13 @@ static void CreatePCMenuWindow(void)
         windowId = CreateWindowFromRect(0, 0, windowWidth, nitems * 2);
         SetStdWindowBorderStyle(windowId, FALSE);
         if (FlagGet(FLAG_SYS_POKEDEX_GET))
-            AddTextPrinterParameterized(windowId, 2, gText_ProfOakSPc, cursorWidth, 34, 0xFF, NULL);
-        AddTextPrinterParameterized(windowId, 2, gText_LogOff, cursorWidth, 2 + 16 * (nitems - 1), 0xFF, NULL);
+            AddTextPrinterParameterized(windowId, 2, gText_ProfOakSPc, cursorWidth, 34, TEXT_SPEED_FF, NULL);
+        AddTextPrinterParameterized(windowId, 2, gText_LogOff, cursorWidth, 2 + 16 * (nitems - 1), TEXT_SPEED_FF, NULL);
     }
     if (FlagGet(FLAG_SYS_NOT_SOMEONES_PC))
-        AddTextPrinterParameterized(windowId, 2, gText_BillSPc, cursorWidth, 2 , 0xFF, NULL);
+        AddTextPrinterParameterized(windowId, 2, gText_BillSPc, cursorWidth, 2 , TEXT_SPEED_FF, NULL);
     else
-        AddTextPrinterParameterized(windowId, 2, gText_SomeoneSPc, cursorWidth, 2 , 0xFF, NULL);
+        AddTextPrinterParameterized(windowId, 2, gText_SomeoneSPc, cursorWidth, 2 , TEXT_SPEED_FF, NULL);
     StringExpandPlaceholders(gStringVar4, gText_SPc);
     Menu_PrintFormatIntlPlayerName(windowId, gStringVar4, cursorWidth, 18);
     Menu_InitCursor(windowId, 2, 0, 2, 16, nitems, 0);
@@ -1004,7 +1004,7 @@ static void CreatePCMenuWindow(void)
 void ScriptMenu_DisplayPCStartupPrompt(void)
 {
     sub_80F7768(0, TRUE);
-    AddTextPrinterParameterized2(0, 2, Text_AccessWhichPC, 0, NULL, 2, 1, 3);
+    AddTextPrinterParameterized2(0, 2, Text_AccessWhichPC, 0, NULL, TEXT_COLOR_DARK_GREY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GREY);
 }
 
 static void Task_ScriptShowMonPic(u8 taskId)
@@ -1229,16 +1229,16 @@ void DrawSeagallopDestinationMenu(void)
         for (i = 0; i < nitems - 2; i++)
         {
             if (r4 != gSpecialVar_0x8004)
-                AddTextPrinterParameterized(windowId, 2, sSeagallopDestStrings[r4], cursorWidth, i * 16 + 2, 0xFF, NULL);
+                AddTextPrinterParameterized(windowId, 2, sSeagallopDestStrings[r4], cursorWidth, i * 16 + 2, TEXT_SPEED_FF, NULL);
             else
                 i--;
             r4++;
             if (r4 == SEAGALLOP_CINNABAR_ISLAND)
                 r4 = SEAGALLOP_VERMILION_CITY;
         }
-        AddTextPrinterParameterized(windowId, 2, gText_Other, cursorWidth, i * 16 + 2, 0xFF, NULL);
+        AddTextPrinterParameterized(windowId, 2, gText_Other, cursorWidth, i * 16 + 2, TEXT_SPEED_FF, NULL);
         i++;
-        AddTextPrinterParameterized(windowId, 2, gOtherText_Exit, cursorWidth, i * 16 + 2, 0xFF, NULL);
+        AddTextPrinterParameterized(windowId, 2, gOtherText_Exit, cursorWidth, i * 16 + 2, TEXT_SPEED_FF, NULL);
         Menu_InitCursor(windowId, 2, 0, 2, 16, nitems, 0);
         CreateMCMenuInputHandlerTask(FALSE, nitems, windowId, 0xFF);
         ScheduleBgCopyTilemapToVram(0);

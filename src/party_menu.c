@@ -2593,7 +2593,7 @@ static void PartyMenuPrintText(const u8 *text)
 {
     DrawStdFrameWithCustomTileAndPalette(6, FALSE, 0x4F, 13);
     gTextFlags.canABSpeedUpPrint = TRUE;
-    AddTextPrinterParameterized2(6, 2, text, GetTextSpeedSetting(), 0, 2, 1, 3);
+    AddTextPrinterParameterized2(6, 2, text, GetTextSpeedSetting(), NULL, TEXT_COLOR_DARK_GREY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GREY);
 }
 
 static void PartyMenuDisplayYesNoMenu(void)
@@ -2618,7 +2618,7 @@ static void sub_8122084(u8 windowId, const u8 *str)
 {
     StringExpandPlaceholders(gStringVar4, str);
     gTextFlags.canABSpeedUpPrint = TRUE;
-    AddTextPrinterParameterized2(windowId, 4, gStringVar4, GetTextSpeedSetting(), 0, 2, 1, 3);
+    AddTextPrinterParameterized2(windowId, 4, gStringVar4, GetTextSpeedSetting(), NULL, TEXT_COLOR_DARK_GREY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GREY);
 }
 
 static bool8 sub_81220D4(void)

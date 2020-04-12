@@ -2452,7 +2452,7 @@ static void RunScheduledLinkTasks(void)
 static void PrintTradeErrorOrStatusMessage(u8 idx)
 {
     FillWindowPixelBuffer(0, PIXEL_FILL(1));
-    AddTextPrinterParameterized(0, 3, sTradeErrorOrStatusMessagePtrs[idx], 0, 2, 0xFF, NULL);
+    AddTextPrinterParameterized(0, 3, sTradeErrorOrStatusMessagePtrs[idx], 0, 2, TEXT_SPEED_FF, NULL);
     DrawTextBorderOuter(0, 0x014, 12);
     PutWindowTilemap(0);
     CopyWindowToVram(0, COPYWIN_BOTH);

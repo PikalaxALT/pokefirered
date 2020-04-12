@@ -1099,10 +1099,10 @@ void DrawElevatorCurrentFloorWindow(void)
         sElevatorCurrentFloorWindowId = AddWindow(&sElevatorCurrentFloorWindowTemplate);
         TextWindow_SetStdFrame0_WithPal(sElevatorCurrentFloorWindowId, 0x21D, 0xD0);
         DrawStdFrameWithCustomTileAndPalette(sElevatorCurrentFloorWindowId, FALSE, 0x21D, 0xD);
-        AddTextPrinterParameterized(sElevatorCurrentFloorWindowId, 2, gText_NowOn, 0, 2, 0xFF, NULL);
+        AddTextPrinterParameterized(sElevatorCurrentFloorWindowId, 2, gText_NowOn, 0, 2, TEXT_SPEED_FF, NULL);
         floorname = sFloorNamePointers[gSpecialVar_0x8005];
         strwidth = GetStringWidth(2, floorname, 0);
-        AddTextPrinterParameterized(sElevatorCurrentFloorWindowId, 2, floorname, 56 - strwidth, 16, 0xFF, NULL);
+        AddTextPrinterParameterized(sElevatorCurrentFloorWindowId, 2, floorname, 56 - strwidth, 16, TEXT_SPEED_FF, NULL);
         PutWindowTilemap(sElevatorCurrentFloorWindowId);
         CopyWindowToVram(sElevatorCurrentFloorWindowId, COPYWIN_BOTH);
     }

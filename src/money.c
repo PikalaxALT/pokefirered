@@ -107,7 +107,7 @@ void PrintMoneyAmount(u8 windowId, u8 x, u8 y, int amount, u8 speed)
 void PrintMoneyAmountInMoneyBoxWithBorder(u8 windowId, u16 tileStart, u8 pallete, int amount)
 {
     DrawStdFrameWithCustomTileAndPalette(windowId, FALSE, tileStart, pallete);
-    AddTextPrinterParameterized(windowId, 2, gText_TrainerCardMoney, 0, 0, 0xFF, 0);
+    AddTextPrinterParameterized(windowId, 2, gText_TrainerCardMoney, 0, 0, TEXT_SPEED_FF, NULL);
     PrintMoneyAmountInMoneyBox(windowId, amount, 0);
 }
 
