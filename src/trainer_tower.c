@@ -635,7 +635,7 @@ static void TT_ConvertEasyChatMessageToString(u16 *ecWords, u8 *dest)
 {
     s32 r1;
     ConvertEasyChatWordsToString(dest, ecWords, 3, 2);
-    if ((unsigned)GetStringWidth(2, dest, -1) > 196)
+    if (GetStringWidth(2, dest, -1) > 196u)
     {
         ConvertEasyChatWordsToString(dest, ecWords, 2, 3);
         r1 = 0;

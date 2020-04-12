@@ -82,6 +82,6 @@ void ListMenuGetScrollAndRow(u8 listTaskId, u16 *cursorPos, u16 *itemsAbove);
 u16 ListMenuGetYCoordForPrintingArrowCursor(u8 listTaskId);
 void ListMenuOverrideSetColors(u8 cursorPal, u8 fillValue, u8 cursorShadowPal);
 void ListMenuDefaultCursorMoveFunc(s32 itemIndex, bool8 onInit, struct ListMenu *list);
-void ListMenuSetUnkIndicatorsStructField(u8 taskId, u8 field, s32 value);
+void ListMenuSetTemplateField(u8 taskId, u8 field, s32 value);
 
 #endif //GUARD_LIST_MENU_H

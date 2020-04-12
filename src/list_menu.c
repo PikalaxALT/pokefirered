@@ -11,29 +11,6 @@
 #include "pokemon_icon.h"
 #include "constants/songs.h"
 
-struct UnkIndicatorsStruct
-{
-    u8 field_0;
-    u16 *field_4;
-    u16 field_8;
-    u16 field_A;
-    u16 field_C;
-    u16 field_E;
-    u8 field_10;
-    u8 field_11;
-    u8 field_12;
-    u8 field_13;
-    u8 field_14_0:4;
-    u8 field_14_1:4;
-    u8 field_15_0:4;
-    u8 field_15_1:4;
-    u8 field_16_0:3;
-    u8 field_16_1:3;
-    u8 field_16_2:2;
-    u8 field_17_0:6;
-    u8 field_17_1:2;
-};
-
 struct MysteryGiftLinkMenuStruct
 {
     s32 currItemId;
@@ -646,104 +623,104 @@ void ListMenuDefaultCursorMoveFunc(s32 itemIndex, bool8 onInit, struct ListMenu 
         PlaySE(SE_SELECT);
 }
 
-static s32 ListMenuGetUnkIndicatorsStructFields(u8 taskId, u8 field)
+s32 ListMenuGetTemplateField(u8 taskId, u8 field)
 {
-    struct UnkIndicatorsStruct *data = (struct UnkIndicatorsStruct *)gTasks[taskId].data;
+    struct ListMenu *data = (struct ListMenu *)gTasks[taskId].data;
 
     switch (field)
     {
     case 0:
     case 1:
-        return (s32)(data->field_4);
+        return (intptr_t)(data->template.moveCursorFunc);
     case 2:
-        return data->field_C;
+        return data->template.totalItems;
     case 3:
-        return data->field_E;
+        return data->template.maxShowed;
     case 4:
-        return data->field_10;
+        return data->template.windowId;
     case 5:
-        return data->field_11;
+        return data->template.header_X;
     case 6:
-        return data->field_12;
+        return data->template.item_X;
     case 7:
-        return data->field_13;
+        return data->template.cursor_X;
     case 8:
-        return data->field_14_0;
+        return data->template.upText_Y;
     case 9:
-        return data->field_14_1;
+        return data->template.cursorPal;
     case 10:
-        return data->field_15_0;
+        return data->template.fillValue;
     case 11:
-        return data->field_15_1;
+        return data->template.cursorShadowPal;
     case 12:
-        return data->field_16_0;
+        return data->template.lettersSpacing;
     case 13:
-        return data->field_16_1;
+        return data->template.itemVerticalPadding;
     case 14:
-        return data->field_16_2;
+        return data->template.scrollMultiple;
     case 15:
-        return data->field_17_0;
+        return data->template.fontId;
     case 16:
-        return data->field_17_1;
+        return data->template.cursorKind;
     default:
         return -1;
     }
 }
 
-void ListMenuSetUnkIndicatorsStructField(u8 taskId, u8 field, s32 value)
+void ListMenuSetTemplateField(u8 taskId, u8 field, s32 value)
 {
-    struct UnkIndicatorsStruct *data = (struct UnkIndicatorsStruct *)gTasks[taskId].data;
+    struct ListMenu *data = (struct ListMenu *)gTasks[taskId].data;
 
     switch (field)
     {
     case 0:
     case 1:
-        data->field_4 = (void *)value;
+        data->template.moveCursorFunc = (void *)value;
         break;
     case 2:
-        data->field_C = value;
+        data->template.totalItems = value;
         break;
     case 3:
-        data->field_E = value;
+        data->template.maxShowed = value;
         break;
     case 4:
-        data->field_10 = value;
+        data->template.windowId = value;
         break;
     case 5:
-        data->field_11 = value;
+        data->template.header_X = value;
         break;
     case 6:
-        data->field_12 = value;
+        data->template.item_X = value;
         break;
     case 7:
-        data->field_13 = value;
+        data->template.cursor_X = value;
         break;
     case 8:
-        data->field_14_0 = value;
+        data->template.upText_Y = value;
         break;
     case 9:
-        data->field_14_1 = value;
+        data->template.cursorPal = value;
         break;
     case 10:
-        data->field_15_0 = value;
+        data->template.fillValue = value;
         break;
     case 11:
-        data->field_15_1 = value;
+        data->template.cursorShadowPal = value;
         break;
     case 12:
-        data->field_16_0 = value;
+        data->template.lettersSpacing = value;
         break;
     case 13:
-        data->field_16_1 = value;
+        data->template.itemVerticalPadding = value;
         break;
     case 14:
-        data->field_16_2 = value;
+        data->template.scrollMultiple = value;
         break;
     case 15:
-        data->field_17_0 = value;
+        data->template.fontId = value;
         break;
     case 16:
-        data->field_17_1 = value;
+        data->template.cursorKind = value;
         break;
     }
 }
