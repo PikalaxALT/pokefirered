@@ -50,7 +50,8 @@ struct BerryCrushGame_Player
         u8 as_2d_bytes[2][8];
         u16 as_hwords[8];
     } unk4;
-    u8 unk14[12];
+    u8 unk14[PLAYER_NAME_LENGTH + 1];
+    int unk1C;
 };
 
 struct BerryCrushGame_5C
@@ -87,25 +88,26 @@ union BerryCrushGame_68
             // 0: Number of A presses
             // 1: Neatness
             u16 stats[2][5];
-            u8 filler20[16];
+            u8 unk20[2][8]; // overlaps with as_five_players.players[0].unk4.as_2d_bytes
         } unk00;
-        u8 unk30[12];
+        u8 myName[PLAYER_NAME_LENGTH + 1];
+        int unk38;
         struct BerryCrushGame_Player others[4];
         u8 fillerBC[20];
     } as_four_players;
     struct BerryCrushGame_68_y
     {
         u8 filler00[28];
-        struct BerryCrushGame_Player players[5];
+        struct BerryCrushGame_Player players[5]; // 1C
         u8 fillerBC[20];
     } as_five_players;
 };
 
 struct BerryCrushPlayerSeatCoords
 {
-    u8 unk0;
-    u8 unk1;
-    u8 unk2;
+    u8 nameWindowTemplateNum;
+    u8 nameWindowX;
+    u8 nameWindowY;
     s16 unk4;
     s16 unk6;
     s16 unk8;
@@ -129,7 +131,7 @@ struct BerryCrushGame_138
     struct Sprite *timerSprites[2];
     u8 unk80;
     u8 filler81;
-    u8 unk82;
+    u8 windowId;
     u8 unk83[5];
 };
 
@@ -180,10 +182,10 @@ struct BerryCrushGame
     u8 bg3Buffer[0x1000];
 };
 
-#define BERRYCRUSH_PLAYER_NAME(game, i)                        \
+#define BERRYCRUSH_PLAYER_NAME(game, i)              \
     ((u8 *)(game)                                    \
     + offsetof(struct BerryCrushGame, unk68)         \
-    + offsetof(struct BerryCrushGame_68_x, unk30)    \
+    + offsetof(struct BerryCrushGame_68_x, myName)   \
     + sizeof(struct BerryCrushGame_Player) * (i))
 
 struct BerryCrushGame *GetBerryCrushGame(void);
