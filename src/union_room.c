@@ -49,6 +49,8 @@
 #include "constants/trainer_card.h"
 #include "constants/union_room.h"
 
+#define MENU_SKIPPED -3
+
 static EWRAM_DATA u8 sUnionRoomPlayerName[12] = {};
 static EWRAM_DATA u8 sPlayerCurrActivity = 0;
 static EWRAM_DATA u8 sPlayerActivityGroupSize = 0;
@@ -872,12 +874,12 @@ static void Task_TryBecomeLinkLeader(u8 taskId)
             data->state = 12;
             break;
         case 1:
-        case -1:
+        case MENU_B_PRESSED:
             data->field_19 = 6;
             SendByteToPartnerByIdAndName(6, ReadAsU16(data->field_0->arr[data->playerCount].gname_uname.gname.unk_00.playerTrainerId), data->field_0->arr[data->playerCount].gname_uname.uname);
             data->state = 12;
             break;
-        case -3:
+        case MENU_SKIPPED:
             data->state = 9;
             break;
         }
@@ -954,7 +956,7 @@ static void Task_TryBecomeLinkLeader(u8 taskId)
             data->state = 17;
             break;
         case 1:
-        case -1:
+        case MENU_B_PRESSED:
             // No
             if ((sPlayerActivityGroupSize & 0xF0) != 0)
                 data->state = 30;
@@ -974,7 +976,7 @@ static void Task_TryBecomeLinkLeader(u8 taskId)
             data->state = 23;
             break;
         case 1:
-        case -1:
+        case MENU_B_PRESSED:
             if ((sPlayerActivityGroupSize & 0xF0) != 0)
                 data->state = 15;
             else if (data->playerCount == (sPlayerActivityGroupSize & 0xF))
@@ -1460,11 +1462,11 @@ static void Task_TryJoinLinkGroup(u8 taskId)
             RedrawListMenu(data->listTaskId);
             break;
         case 1:
-        case -1:
+        case MENU_B_PRESSED:
             data->state = 5;
             RedrawListMenu(data->listTaskId);
             break;
-        case -3:
+        case MENU_SKIPPED:
             data->state = 6;
             RedrawListMenu(data->listTaskId);
             break;
@@ -2886,7 +2888,7 @@ static void Task_RunUnionRoom(u8 taskId)
         break;
     case 6:
         var5 = ListMenuHandler_AllItemsAvailable(&data->textState, &data->topListMenuWindowId, &data->topListMenuListMenuId, &sWindowTemplate_InviteToActivity, &sListMenuTemplate_InviteToActivity);
-        if (var5 != -1)
+        if (var5 != LIST_NOTHING_CHOSEN)
         {
             if (!gReceivedRemoteLinkPlayers)
             {
@@ -2896,7 +2898,7 @@ static void Task_RunUnionRoom(u8 taskId)
             {
                 data->partnerYesNoResponse = 0;
                 playerGender = GetUnionRoomPlayerGender(taskData[1], data->field_0);
-                if (var5 == -2 || var5 == IN_UNION_ROOM)
+                if (var5 == LIST_CANCEL || var5 == IN_UNION_ROOM)
                 {
                     data->playerSendBuffer[0] = IN_UNION_ROOM;
                     RfuPrepareSend0x2f00(data->playerSendBuffer);
@@ -3019,7 +3021,7 @@ static void Task_RunUnionRoom(u8 taskId)
             taskData[3] = 0;
             break;
         case 1:
-        case -1:
+        case MENU_B_PRESSED:
             playerGender = GetUnionRoomPlayerGender(taskData[1], data->field_0);
             UnionRoom_ScheduleFieldMessageAndExit(gUnknown_8458548[playerGender]);
             break;
@@ -3154,7 +3156,7 @@ static void Task_RunUnionRoom(u8 taskId)
             }
             break;
         case 1:
-        case -1:
+        case MENU_B_PRESSED:
             data->playerSendBuffer[0] = ACTIVITY_DECLINE | IN_UNION_ROOM;
             RfuPrepareSend0x2f00(data->playerSendBuffer);
             data->state = 10;
@@ -3241,9 +3243,9 @@ static void Task_RunUnionRoom(u8 taskId)
         break;
     case 47:
         var5 = ListMenuHandler_AllItemsAvailable(&data->textState, &data->tradeBoardSelectWindowId, &data->tradeBoardDetailsWindowId, &sWindowTemplate_TradeBoardRegisterInfoExit, &sListMenuTemplate_TradeBoardRegisterInfoExit);
-        if (var5 != -1)
+        if (var5 != LIST_NOTHING_CHOSEN)
         {
-            if (var5 == -2 || var5 == 3)
+            if (var5 == LIST_CANCEL || var5 == 3)
             {
                 data->state = 4;
                 HandleCancelTrade(TRUE);
@@ -3281,7 +3283,7 @@ static void Task_RunUnionRoom(u8 taskId)
         {
             switch (var5)
             {
-            case -2:
+            case LIST_CANCEL:
             case 18:
                 ResetUnionRoomTrade(&sUnionRoomTrade);
                 RfuUpdatePlayerGnameStateAndSend(0, 0, 0);
@@ -3305,7 +3307,7 @@ static void Task_RunUnionRoom(u8 taskId)
             data->state = 56;
             break;
         case 1:
-        case -1:
+        case MENU_B_PRESSED:
             HandleCancelTrade(TRUE);
             data->state = 4;
             break;
@@ -3334,7 +3336,7 @@ static void Task_RunUnionRoom(u8 taskId)
         {
             switch (var5)
             {
-            case -2:
+            case LIST_CANCEL:
             case 8:
                 HandleCancelTrade(TRUE);
                 DestroyHelpMessageWindow_();
@@ -3369,7 +3371,7 @@ static void Task_RunUnionRoom(u8 taskId)
         case 0:
             data->state = 50;
             break;
-        case -1:
+        case MENU_B_PRESSED:
         case 1:
             HandleCancelTrade(TRUE);
             data->state = 4;
@@ -3842,14 +3844,14 @@ static s8 UnionRoomHandleYesNo(u8 *state_p, bool32 no_draw)
             return -3;
         }
         r1 = Menu_ProcessInputNoWrapClearOnChoose();
-        if (r1 == -1 || r1 == 0 || r1 == 1)
+        if (r1 == MENU_B_PRESSED || r1 == 0 || r1 == 1)
         {
             *state_p = 0;
             return r1;
         }
         break;
     }
-    return -2;
+    return MENU_NOTHING_CHOSEN;
 }
 
 static u8 CreateTradeBoardWindow(const struct WindowTemplate * template)
@@ -3900,12 +3902,12 @@ static s32 ListMenuHandler_AllItemsAvailable(u8 *state_p, u8 *win_id_p, u8 *list
             ClearStdWindowAndFrame(*win_id_p, TRUE);
             RemoveWindow(*win_id_p);
             *state_p = 0;
-            return -2;
+            return LIST_CANCEL;
         }
         break;
     }
 
-    return -1;
+    return LIST_NOTHING_CHOSEN;
 }
 
 static s32 TradeBoardMenuHandler(u8 *state_p, u8 *win_id_p, u8 *list_menu_id_p, u8 *trade_board_win_id_p, const struct WindowTemplate * winTemplate, const struct ListMenuTemplate * menuTemplate, struct UnkStruct_Main0 * traders)
@@ -3936,7 +3938,7 @@ static s32 TradeBoardMenuHandler(u8 *state_p, u8 *win_id_p, u8 *list_menu_id_p, 
                 RemoveWindow(*win_id_p);
                 DeleteTradeBoardWindow(*trade_board_win_id_p);
                 *state_p = 0;
-                return -2;
+                return LIST_CANCEL;
             }
             else
             {
@@ -3959,7 +3961,7 @@ static s32 TradeBoardMenuHandler(u8 *state_p, u8 *win_id_p, u8 *list_menu_id_p, 
         break;
     }
 
-    return -1;
+    return LIST_NOTHING_CHOSEN;
 }
 
 static void UR_BlankBg0(void)

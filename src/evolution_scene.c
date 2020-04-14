@@ -1242,7 +1242,7 @@ static void Task_TradeEvolutionScene(u8 taskId)
                     BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 0x10, RGB_BLACK);
                 break;
             case 1:
-            case -1:
+            case MENU_B_PRESSED:
                 sEvoCursorPos = 1;
                 BattleStringExpandPlaceholdersToDisplayedString(gBattleStringsTable[STRINGID_EMPTYSTRING3 - BATTLESTRINGS_ID_ADDER]);
                 DrawTextOnTradeWindow(0, gDisplayedStringBattle, 1);

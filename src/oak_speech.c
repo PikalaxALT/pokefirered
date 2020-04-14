@@ -1088,8 +1088,8 @@ static void Task_OakSpeech20(u8 taskId)
     case 1:
         gSaveBlock2Ptr->playerGender = FEMALE;
         break;
-    case -1:
-    case -2:
+    case MENU_B_PRESSED:
+    case MENU_NOTHING_CHOSEN:
         return;
     }
     gTasks[taskId].func = Task_OakSpeech21;
@@ -1202,7 +1202,7 @@ static void Task_OakSpeech29(u8 taskId)
         BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, 0);
         gTasks[taskId].func = Task_OakSpeech25;
         break;
-    case -1:
+    case MENU_B_PRESSED:
         break;
     }
 }
@@ -1282,7 +1282,7 @@ static void Task_OakSpeech27(u8 taskId)
         }
         break;
     case 1:
-    case -1:
+    case MENU_B_PRESSED:
         PlaySE(SE_SELECT);
         if (sOakSpeechResources->unk_0010 == 0)
             gTasks[taskId].func = Task_OakSpeech24;

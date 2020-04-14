@@ -1415,9 +1415,9 @@ static void Task_ListMenuHandleInput(u8 taskId)
     input = ListMenu_ProcessInput(task->data[14]);
     switch (input)
     {
-    case -1:
+    case LIST_NOTHING_CHOSEN:
         break;
-    case -2:
+    case LIST_CANCEL:
         gSpecialVar_Result = 0x7F;
         PlaySE(SE_SELECT);
         Task_DestroyListMenu(taskId);

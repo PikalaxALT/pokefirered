@@ -948,9 +948,9 @@ static void Task_BerryPouchMain(u8 taskId)
         {
             switch (menuInput)
             {
-            case -1:
+            case LIST_NOTHING_CHOSEN:
                 return;
-            case -2:
+            case LIST_CANCEL:
                 if (sStaticCnt.type != BERRYPOUCH_FROMBERRYCRUSH)
                 {
                     PlaySE(SE_SELECT);
@@ -1045,9 +1045,9 @@ static void Task_NormalContextMenu_HandleInput(u8 taskId)
         input = Menu_ProcessInputNoWrapAround();
         switch (input)
         {
-        case -2:
+        case MENU_NOTHING_CHOSEN:
             break;
-        case -1:
+        case MENU_B_PRESSED:
             PlaySE(SE_SELECT);
             sContextMenuActions[BP_ACTION_EXIT].func.void_u8(taskId);
             break;

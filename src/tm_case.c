@@ -741,9 +741,9 @@ static void Task_TMCaseMain(u8 taskId)
             {
                 switch (input)
                 {
-                case -1:
+                case LIST_NOTHING_CHOSEN:
                     break;
-                case -2:
+                case LIST_CANCEL:
                     PlaySE(SE_SELECT);
                     gSpecialVar_ItemId = 0;
                     Task_BeginFadeOutFromTMCase(taskId);
@@ -813,11 +813,11 @@ static void Task_TMContextMenu_HandleInput(u8 taskId)
         input = Menu_ProcessInputNoWrapAround();
         switch (input)
         {
-        case -1:
+        case MENU_B_PRESSED:
             PlaySE(SE_SELECT);
             sMenuActions_UseGiveExit[sTMCaseDynamicResources->menuActionIndices[sTMCaseDynamicResources->numMenuActions - 1]].func.void_u8(taskId);
             break;
-        case -2:
+        case MENU_NOTHING_CHOSEN:
             break;
         default:
             PlaySE(SE_SELECT);

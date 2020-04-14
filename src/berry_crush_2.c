@@ -1218,7 +1218,7 @@ static u32 BerryCrushCommand_AskPlayAgain(struct BerryCrushGame * game, u8 *para
         DisplayYesNoMenuDefaultYes();
         break;
     case 2:
-        if ((r4 = Menu_ProcessInputNoWrapClearOnChoose()) != -2)
+        if ((r4 = Menu_ProcessInputNoWrapClearOnChoose()) != MENU_NOTHING_CHOSEN)
         {
             memset(game->sendCmd + 1, 0, sizeof(game->sendCmd) - 2);
             if (r4 == 0)

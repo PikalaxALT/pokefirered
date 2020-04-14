@@ -736,9 +736,9 @@ static void Task_ItemPcMain(u8 taskId)
         ListMenuGetScrollAndRow(data[0], &sListMenuState.scroll, &sListMenuState.row);
         switch (input)
         {
-        case -1:
+        case LIST_NOTHING_CHOSEN:
             break;
-        case -2:
+        case LIST_CANCEL:
             PlaySE(SE_SELECT);
             ItemPc_SetInitializedFlag(FALSE);
             gTasks[taskId].func = Task_ItemPcTurnOff1;
@@ -853,11 +853,11 @@ static void Task_ItemPcSubmenuRun(u8 taskId)
     s8 input = Menu_ProcessInputNoWrapAround();
     switch (input)
     {
-    case -1:
+    case MENU_B_PRESSED:
         PlaySE(SE_SELECT);
         Task_ItemPcCancel(taskId);
         break;
-    case -2:
+    case MENU_NOTHING_CHOSEN:
         break;
     default:
         PlaySE(SE_SELECT);

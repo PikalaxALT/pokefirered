@@ -803,9 +803,9 @@ static void Task_MultichoiceMenu_HandleInput(u8 taskId)
                 MultiChoicePrintHelpDescription(data[7]);
             switch (input)
             {
-            case -2:
+            case MENU_NOTHING_CHOSEN:
                 return;
-            case -1:
+            case MENU_B_PRESSED:
                 if (data[4])
                     return;
                 PlaySE(SE_SELECT);
@@ -874,9 +874,9 @@ static void Task_YesNoMenu_HandleInput(u8 taskId)
         input = Menu_ProcessInputNoWrapClearOnChoose();
         switch (input)
         {
-        case -2:
+        case MENU_NOTHING_CHOSEN:
             return;
-        case -1:
+        case MENU_B_PRESSED:
         case 1:
             PlaySE(SE_SELECT);
             gSpecialVar_Result = FALSE;
@@ -923,9 +923,9 @@ static void Hask_MultichoiceGridMenu_HandleInput(u8 taskId)
     s8 input = Menu_ProcessInputGridLayout();
     switch (input)
     {
-    case -2:
+    case MENU_NOTHING_CHOSEN:
         return;
-    case -1:
+    case MENU_B_PRESSED:
         if (data[4])
             return;
         PlaySE(SE_SELECT);

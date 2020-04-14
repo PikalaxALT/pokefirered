@@ -429,7 +429,7 @@ static void MoveRelearnerStateMachine(void)
             }
             break;
         case 1:
-        case -1:
+        case MENU_B_PRESSED:
             sMoveRelearner->state = 3;
             break;
         }
@@ -446,7 +446,7 @@ static void MoveRelearnerStateMachine(void)
             sMoveRelearner->state = 14;
             break;
         case 1:
-        case -1:
+        case MENU_B_PRESSED:
             sMoveRelearner->state = 3;
             break;
         }
@@ -467,7 +467,7 @@ static void MoveRelearnerStateMachine(void)
             sMoveRelearner->state = 19;
             break;
         case 1:
-        case -1:
+        case MENU_B_PRESSED:
             sMoveRelearner->state = 24;
             break;
         }
@@ -487,7 +487,7 @@ static void MoveRelearnerStateMachine(void)
             sMoveRelearner->state = 27;
             break;
         case 1:
-        case -1:
+        case MENU_B_PRESSED:
             sMoveRelearner->state = 16;
             break;
         }
@@ -800,7 +800,7 @@ static void MoveRelearnerMenu_MoveCursorFunc(s32 itemIndex, bool8 onInit, struct
 static s8 YesNoMenuProcessInput(void)
 {
     s8 input = Menu_ProcessInputNoWrapClearOnChoose();
-    if (input != -2)
+    if (input != MENU_NOTHING_CHOSEN)
     {
         PutWindowTilemap(6);
         CopyWindowToVram(6, COPYWIN_MAP);

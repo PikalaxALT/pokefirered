@@ -727,9 +727,9 @@ static void TeachyTvOptionListController(u8 taskId)
         {
             switch (input)
             {
-            case -1:
+            case LIST_NOTHING_CHOSEN:
                 break;
-            case -2:
+            case LIST_CANCEL:
                 PlaySE(SE_SELECT);
                 TeachyTvQuitBeginFade(taskId);
                 break;
