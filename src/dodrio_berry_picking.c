@@ -1024,12 +1024,12 @@ static void sub_815184C(void)
     {
         if (gUnknown_203F3E0->unk128 != 0)
         {
-            sub_80FBA44();
+            Rfu_ClearRecvCmds();
             gUnknown_203F3E0->unk124 = 0;
         }
         else if (gUnknown_203F3E0->unk124 > 70)
         {
-            sub_80FBA44();
+            Rfu_ClearRecvCmds();
             gUnknown_203F3E0->unk124 = 0;
         }
     }
@@ -1090,12 +1090,12 @@ static void sub_8151A5C(void)
     {
         if (gUnknown_203F3E0->unk128 != 0)
         {
-            sub_80FBA44();
+            Rfu_ClearRecvCmds();
             gUnknown_203F3E0->unk124 = 0;
         }
         else if (gUnknown_203F3E0->unk124 > 70)
         {
-            sub_80FBA44();
+            Rfu_ClearRecvCmds();
             gUnknown_203F3E0->unk124 = 0;
         }
     }

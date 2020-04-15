@@ -197,7 +197,7 @@ static void Task_RunBerryCrushGame(u8 taskId)
     if (sBerryCrushGamePtr->cmdCallback != NULL)
         sBerryCrushGamePtr->cmdCallback(sBerryCrushGamePtr, sBerryCrushGamePtr->commandParams);
 
-    sub_814D9CC(sBerryCrushGamePtr);
+    BerryCrush_UpdateTimerDisplayAndCoreHeight(sBerryCrushGamePtr);
 }
 
 void BerryCrush_InitPlayerNamesAndTextSpeed(struct BerryCrushGame *game)

@@ -41,7 +41,7 @@ static u32 BerryCrushCommand_FadeOutToPlayAgain(struct BerryCrushGame * game, u8
 static u32 BerryCrushCommand_PlayAgainFailureMessage(struct BerryCrushGame * game, u8 *params);
 static u32 BerryCrushCommand_GracefulExit(struct BerryCrushGame * game, u8 *params);
 static u32 BerryCrushCommand_Quit(struct BerryCrushGame * game, u8 *params);
-static void sub_814D4D8(struct BerryCrushGame * game);
+static void InitGameState(struct BerryCrushGame * game);
 static void BerryCrush_SetShowMessageParams(u8 *params, u8 stringId, u8 flags, u16 waitKeys, u8 followupCmd);
 
 static const u8 gUnknown_846E2E0[] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80};
@@ -298,7 +298,7 @@ static u32 BerryCrushCommand_AskPickBerry(struct BerryCrushGame * game, u8 *para
         ++game->cmdState;
         break;
     case 0:
-        sub_814D4D8(game);
+        InitGameState(game);
         BerryCrush_SetShowMessageParams(params, BCTEXT_AREYOUREADY, 1, 0, BCCMD_BeginNormalPaletteFade);
         game->nextCmd = BCCMD_AskPickBerry;
         BerryCrush_RunOrScheduleCommand(BCCMD_PrintMessage, 1, NULL);
@@ -595,6 +595,7 @@ static void BerryCrush_BuildLocalState(struct BerryCrushGame * game)
     u16 r1 = 0;
     u8 i = 0;
 
+    // For impact sprites
     for (i = 0; i < game->playerCount; ++i)
     {
         if (game->unk68.as_four_players.others[i].unk4.as_2d_bytes[1][5] != 0)
@@ -708,12 +709,12 @@ static void BerryCrush_HandlePlayerInput(struct BerryCrushGame * game)
         {
             if (game->unk10 > 70)
             {
-                sub_80FBA44();
+                Rfu_ClearRecvCmds();
                 game->unk10 = 0;
             }
             else if (game->localState.unk02_3 == 0)
             {
-                sub_80FBA44();
+                Rfu_ClearRecvCmds();
                 game->unk10 = 0;
             }
         }
@@ -729,7 +730,7 @@ static void BerryCrush_HandlePlayerInput(struct BerryCrushGame * game)
 
 static void BerryCrush_UpdateGameState(struct BerryCrushGame * game)
 {
-    struct BerryCrushGame_4E * r4_;
+    struct BerryCrushGame_4E * recvBlock;
 #ifndef NONMATCHING
     register u32 i asm("r4");
     register u32 iPlusPlus asm("r0");
@@ -752,13 +753,13 @@ static void BerryCrush_UpdateGameState(struct BerryCrushGame * game)
     }
     else
     {
-        r4_ = (struct BerryCrushGame_4E *)&game->recvCmd;
-        memcpy(r4_, gRecvCmds, sizeof(struct BerryCrushGame_4E));
-        game->depth = r4_->data.unk04;
-        game->vibration = r4_->data.unk03;
-        game->timer = r4_->data.unk06;
-        sub_814DC5C(game, &game->spritesManager);
-        if (r4_->data.unk02_0)
+        recvBlock = (struct BerryCrushGame_4E *)&game->recvCmd;
+        memcpy(recvBlock, gRecvCmds, sizeof(struct BerryCrushGame_4E));
+        game->depth = recvBlock->data.unk04;
+        game->vibration = recvBlock->data.unk03;
+        game->timer = recvBlock->data.unk06;
+        UpdateImpactAndSparkleSpriteAnims(game, &game->spritesManager);
+        if (recvBlock->data.unk02_0)
             game->unk25_3 = 1;
     }
 }
@@ -866,7 +867,7 @@ static u32 BerryCrushCommand_FinishGame(struct BerryCrushGame * game, UNUSED u8 
         SetGpuReg(REG_OFFSET_BG3VOFS, 0);
         break;
     case 4:
-        if (!sub_814DE50(game, &game->spritesManager))
+        if (!AreAllImpactAndSparkleSpriteAnimsFinished(game, &game->spritesManager))
             return 0;
         LinkRfu_SetRfuFuncToSend6600();
         game->unk10 = 0;
@@ -900,7 +901,7 @@ static u32 BerryCrushCommand_HandleTimeUp(struct BerryCrushGame * game, u8 *para
         game->spritesManager.animBerryIdx = 0;
         break;
     case 2:
-        if (!sub_814DE50(game, &game->spritesManager))
+        if (!AreAllImpactAndSparkleSpriteAnimsFinished(game, &game->spritesManager))
             return 0;
         LinkRfu_SetRfuFuncToSend6600();
         game->unk10 = 0;
@@ -1120,7 +1121,7 @@ static u32 BerryCrushCommand_ShowResults(struct BerryCrushGame * game, u8 *param
     switch (game->cmdState)
     {
     case 0:
-        if (!sub_814E644(game, &game->spritesManager))
+        if (!BerryCrush_PrintResults(game, &game->spritesManager))
             return 0;
         break;
     case 1:
@@ -1136,10 +1137,10 @@ static u32 BerryCrushCommand_ShowResults(struct BerryCrushGame * game, u8 *param
         if (!JOY_NEW(A_BUTTON))
             return 0;
         PlaySE(SE_SELECT);
-        sub_814E80C(game);
+        BerryCrush_DismantleResultsWindow(game);
         break;
     case 3:
-        if (game->gameState <= 12)
+        if (game->gameState < 13)
         {
             ++game->gameState;
             game->cmdState = 0;
@@ -1299,7 +1300,7 @@ static u32 BerryCrushCommand_FadeOutToPlayAgain(struct BerryCrushGame * game, UN
         break;
     case 2:
         ClearDialogWindowAndFrame(0, TRUE);
-        sub_814DA04(game);
+        BerryCrush_ResetCorePosition(game);
         BeginNormalPaletteFade(0xFFFFFFFF, 0, 0x10, 0, RGB_BLACK);
         UpdatePaletteFade();
         break;
@@ -1376,7 +1377,7 @@ static u32 BerryCrushCommand_Quit(UNUSED struct BerryCrushGame * game, UNUSED u8
     return 0;
 }
 
-static void sub_814D4D8(struct BerryCrushGame * game)
+static void InitGameState(struct BerryCrushGame * game)
 {
     u8 r5 = 0;
 

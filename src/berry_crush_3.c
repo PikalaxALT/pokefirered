@@ -24,18 +24,18 @@
 static void FramesToMinSec(struct BerryCrushGame_138 * manager, u16 frames);
 static void PrintTextCentered(u8 windowId, u8 left, u8 colorId, const u8 *string);
 static void PrintBerryCrushResultWindow(struct BerryCrushGame * game, u8 command, u8 x, u8 y);
-static void sub_814E32C(struct BerryCrushGame * game);
+static void PrintTime_PressingRate_Etc(struct BerryCrushGame * game);
 static void Task_ShowBerryCrushRankings(u8 taskId);
 static void BerryCrush_PrintTimeOnSprites(struct BerryCrushGame_138 * manager, u16 frames);
-static void sub_814EB38(struct BerryCrushGame * game);
-static void sub_814EBB0(struct BerryCrushGame * game);
-static void sub_814EC80(struct BerryCrushGame * game);
-static void sub_814ECE0(struct BerryCrushGame * game);
-static void sub_814EF10(struct BerryCrushGame * game);
+static void CreatePlayerNameWindows(struct BerryCrushGame * game);
+static void PrintPlayerNamesOnWindows(struct BerryCrushGame * game);
+static void LoadPlayerNameWindowFrames(struct BerryCrushGame * game);
+static void BerryCrush_LoadSpritesGfxAndCreateSprites(struct BerryCrushGame * game);
+static void BerryCrush_DestroySprites(struct BerryCrushGame * game);
 static void SpriteCB_BerryCrushImpact(struct Sprite * sprite);
-static void sub_814EFFC(struct Sprite * sprite);
-static void sub_814F044(struct Sprite * sprite);
-static void sub_814F0D8(struct Sprite * sprite);
+static void SpriteCB_EndSparkles(struct Sprite * sprite);
+static void SpriteCB_Sparkles(struct Sprite * sprite);
+static void SpriteCallback_Sparkles(struct Sprite * sprite);
 
 static const struct BgTemplate sBgTemplates[] = {
     {
@@ -229,13 +229,13 @@ static const struct BerryCrushPlayerSeatCoords sMiscCoordsBySeatNo[] = {
     {4, 20, 6, 16, 20, 16, -8}
 };
 
-static const s8 gUnknown_846F2D0[][2] = {
+static const s8 sImpactSpritePositions[][2] = {
     { 0,  0},
     {-1,  0},
     { 1,  1}
 };
 
-static const s8 gUnknown_846F2D6[][2] = {
+static const s8 sSparklesSpriteCoords[][2] = {
     {  0,   0},
     {-16,  -4},
     { 16,  -4},
@@ -510,8 +510,8 @@ int BerryCrush_InitBgs(void)
 
         InitStandardTextBoxWindows();
         ResetBg0();
-        sub_814EB38(game);
-        sub_814EBB0(game);
+        CreatePlayerNameWindows(game);
+        PrintPlayerNamesOnWindows(game);
         gPaletteFade.bufferTransferDisabled = TRUE;
         break;
     case 7:
@@ -519,7 +519,7 @@ int BerryCrush_InitBgs(void)
         CopyToBgTilemapBuffer(1, gBerryCrushGrinderTopTilemap, 0, 0);
         CopyToBgTilemapBuffer(2, gBerryCrushContainerCapTilemap, 0, 0);
         CopyToBgTilemapBuffer(3, gBerryCrushBackgroundTilemap, 0, 0);
-        sub_814EC80(game);
+        LoadPlayerNameWindowFrames(game);
         CopyBgTilemapBufferToVram(1);
         CopyBgTilemapBufferToVram(2);
         CopyBgTilemapBufferToVram(3);
@@ -527,7 +527,7 @@ int BerryCrush_InitBgs(void)
     case 8:
         LoadWirelessStatusIndicatorSpriteGfx();
         CreateWirelessStatusIndicatorSprite(0,  0);
-        sub_814ECE0(game);
+        BerryCrush_LoadSpritesGfxAndCreateSprites(game);
         SetGpuReg(REG_OFFSET_BG1VOFS, -gSpriteCoordOffsetY);
         ChangeBgX(1, 0, 0);
         ChangeBgY(1, 0, 0);
@@ -597,7 +597,7 @@ int BerryCrush_TeardownBgs(void)
         break;
     case 6:
         DestroyWirelessStatusIndicatorSprite();
-        sub_814EF10(var0);
+        BerryCrush_DestroySprites(var0);
         DigitObjUtil_Teardown();
         break;
     case 7:
@@ -609,7 +609,7 @@ int BerryCrush_TeardownBgs(void)
     return 0;
 }
 
-int sub_814D9CC(struct BerryCrushGame * game)
+int BerryCrush_UpdateTimerDisplayAndCoreHeight(struct BerryCrushGame * game)
 {
     gSpriteCoordOffsetY = game->depth + game->vibration;
     SetGpuReg(REG_OFFSET_BG1VOFS, -gSpriteCoordOffsetY);
@@ -621,7 +621,7 @@ int sub_814D9CC(struct BerryCrushGame * game)
     return 0;
 }
 
-void sub_814DA04(struct BerryCrushGame * game)
+void BerryCrush_ResetCorePosition(struct BerryCrushGame * game)
 {
     game->depth = -104;
     game->vibration = 0;
@@ -714,59 +714,59 @@ void BerryCrushFreeBerrySpriteGfx(struct BerryCrushGame * arg0, UNUSED struct Be
     }
 }
 
-void sub_814DC5C(struct BerryCrushGame * game, struct BerryCrushGame_138 * manager)
+void UpdateImpactAndSparkleSpriteAnims(struct BerryCrushGame * game, struct BerryCrushGame_138 * manager)
 {
-    u8 sp4;
-    struct BerryCrushGame_4E * var4E;
+    u8 count;
+    struct BerryCrushGame_4E * recvBlock;
     u8 i;
-    u16 var, var2;
+    u16 impactSpec, frameRule;
 
-    sp4 = 0;
-    var4E = (struct BerryCrushGame_4E *)&game->recvCmd;
+    count = 0;
+    recvBlock = (struct BerryCrushGame_4E *)&game->recvCmd;
     for (i = 0; i < game->playerCount; i++)
     {
-        var = var4E->data.unk08 >> (i * 3);
-        var &= 7;
-        if (var)
+        impactSpec = recvBlock->data.unk08 >> (i * 3);
+        impactSpec &= 7;
+        if (impactSpec)
         {
-            sp4++;
-            if (var & 0x4)
+            count++;
+            if (impactSpec & 0x4)
                 StartSpriteAnim(manager->impactSprites[i], 1);
             else
                 StartSpriteAnim(manager->impactSprites[i], 0);
 
             manager->impactSprites[i]->invisible = FALSE;
             manager->impactSprites[i]->animPaused = FALSE;
-            manager->impactSprites[i]->pos2.x = gUnknown_846F2D0[(var % 4) - 1][0];
-            manager->impactSprites[i]->pos2.y = gUnknown_846F2D0[(var % 4) - 1][1];
+            manager->impactSprites[i]->pos2.x = sImpactSpritePositions[(impactSpec % 4) - 1][0];
+            manager->impactSprites[i]->pos2.y = sImpactSpritePositions[(impactSpec % 4) - 1][1];
         }
     }
 
-    if (sp4 == 0)
+    if (count == 0)
     {
         game->unk25_2 = 0;
     }
     else
     {
-        var = (u8)(game->timer % 3);
-        var2 = var;
-        for (i = 0; i < var4E->data.unk0A * 2 + 3; i++)
+        impactSpec = (u8)(game->timer % 3);
+        frameRule = impactSpec;
+        for (i = 0; i < recvBlock->data.unk0A * 2 + 3; i++)
         {
             if (manager->sparkleSprites[i]->invisible)
             {
-                manager->sparkleSprites[i]->callback = sub_814F0D8;
-                manager->sparkleSprites[i]->pos1.x = gUnknown_846F2D6[i][0] + 120;
-                manager->sparkleSprites[i]->pos1.y = gUnknown_846F2D6[i][1] + 136 - (var * 4);
-                manager->sparkleSprites[i]->pos2.x = gUnknown_846F2D6[i][0] + (gUnknown_846F2D6[i][0] / (var2 * 4));
-                manager->sparkleSprites[i]->pos2.y = gUnknown_846F2D6[i][1];
-                if (var4E->data.unk02_1)
+                manager->sparkleSprites[i]->callback = SpriteCallback_Sparkles;
+                manager->sparkleSprites[i]->pos1.x = sSparklesSpriteCoords[i][0] + 120;
+                manager->sparkleSprites[i]->pos1.y = sSparklesSpriteCoords[i][1] + 136 - (impactSpec * 4);
+                manager->sparkleSprites[i]->pos2.x = sSparklesSpriteCoords[i][0] + (sSparklesSpriteCoords[i][0] / (frameRule * 4));
+                manager->sparkleSprites[i]->pos2.y = sSparklesSpriteCoords[i][1];
+                if (recvBlock->data.unk02_1)
                     StartSpriteAnim(manager->sparkleSprites[i], 1);
                 else
                     StartSpriteAnim(manager->sparkleSprites[i], 0);
 
-                var++;
-                if (var > 3)
-                    var = 0;
+                impactSpec++;
+                if (impactSpec > 3)
+                    impactSpec = 0;
             }
         }
 
@@ -776,7 +776,7 @@ void sub_814DC5C(struct BerryCrushGame * game, struct BerryCrushGame_138 * manag
         }
         else
         {
-            if (sp4 == 1)
+            if (count == 1)
                 PlaySE(SE_TOY_DANGO);
             else
                 PlaySE(SE_TOY_KABE);
@@ -786,24 +786,24 @@ void sub_814DC5C(struct BerryCrushGame * game, struct BerryCrushGame_138 * manag
     }
 }
 
-bool32 sub_814DE50(struct BerryCrushGame * arg0, struct BerryCrushGame_138 * arg1)
+bool32 AreAllImpactAndSparkleSpriteAnimsFinished(struct BerryCrushGame * game, struct BerryCrushGame_138 * manager)
 {
     u8 i;
 
-    for (i = 0; i < arg0->playerCount; i++)
+    for (i = 0; i < game->playerCount; i++)
     {
-        if (!arg1->impactSprites[i]->invisible)
+        if (!manager->impactSprites[i]->invisible)
             return FALSE;
     }
 
     for (i = 0; i < 11; i++)
     {
-        if (!arg1->sparkleSprites[i]->invisible)
+        if (!manager->sparkleSprites[i]->invisible)
             return FALSE;
     }
 
-    if (arg0->vibration != 0)
-        arg0->vibration = 0;
+    if (game->vibration != 0)
+        game->vibration = 0;
 
     return TRUE;
 }
@@ -905,7 +905,7 @@ static void PrintBerryCrushResultWindow(struct BerryCrushGame * game, u8 command
     }
 }
 
-static void sub_814E32C(struct BerryCrushGame * game)
+static void PrintTime_PressingRate_Etc(struct BerryCrushGame * game)
 {
     u8 i = 0;
     u8 x = 0;
@@ -960,7 +960,7 @@ static void sub_814E32C(struct BerryCrushGame * game)
     AddTextPrinterParameterized3(game->spritesManager.windowId, 2, x, y, sBerryCrushTextColorTable[0], 0, gStringVar4);
 }
 
-bool32 sub_814E644(struct BerryCrushGame * game, struct BerryCrushGame_138 * spriteManager)
+bool32 BerryCrush_PrintResults(struct BerryCrushGame * game, struct BerryCrushGame_138 * spriteManager)
 {
     u8 playerCountMinus2;
     struct WindowTemplate template;
@@ -1006,7 +1006,7 @@ bool32 sub_814E644(struct BerryCrushGame * game, struct BerryCrushGame_138 * spr
         }
         break;
     case 4:
-        sub_814E32C(game);
+        PrintTime_PressingRate_Etc(game);
         break;
     case 5:
         CopyWindowToVram(spriteManager->windowId, COPYWIN_BOTH);
@@ -1017,11 +1017,11 @@ bool32 sub_814E644(struct BerryCrushGame * game, struct BerryCrushGame_138 * spr
     return FALSE;
 }
 
-void sub_814E80C(struct BerryCrushGame * game)
+void BerryCrush_DismantleResultsWindow(struct BerryCrushGame * game)
 {
     ClearStdWindowAndFrameToTransparent(game->spritesManager.windowId, 1);
     RemoveWindow(game->spritesManager.windowId);
-    sub_814EBB0(game);
+    PrintPlayerNamesOnWindows(game);
 }
 
 static void Task_ShowBerryCrushRankings(u8 taskId)
@@ -1147,30 +1147,30 @@ void BerryCrush_HideTimerSprites(struct BerryCrushGame_138 * manager)
     DigitObjUtil_HideOrShow(0, 1);
 }
 
-static void sub_814EB38(struct BerryCrushGame * game)
+static void CreatePlayerNameWindows(struct BerryCrushGame * game)
 {
     u8 i;
 
     for (i = 0; i < game->playerCount; ++i)
     {
         game->spritesManager.seatCoords[i] = &sMiscCoordsBySeatNo[sSeatNumbersByPlayerCountAndPlayerNum[game->playerCount - 2][i]];
-        game->spritesManager.unk83[i] = AddWindow(&sPlayerNameWindowTemplates[game->spritesManager.seatCoords[i]->nameWindowTemplateNum]);
-        PutWindowTilemap(game->spritesManager.unk83[i]);
-        FillWindowPixelBuffer(game->spritesManager.unk83[i], PIXEL_FILL(0));
+        game->spritesManager.playerNameWindowIds[i] = AddWindow(&sPlayerNameWindowTemplates[game->spritesManager.seatCoords[i]->nameWindowTemplateNum]);
+        PutWindowTilemap(game->spritesManager.playerNameWindowIds[i]);
+        FillWindowPixelBuffer(game->spritesManager.playerNameWindowIds[i], PIXEL_FILL(0));
     }
 }
 
-static void sub_814EBB0(struct BerryCrushGame * game)
+static void PrintPlayerNamesOnWindows(struct BerryCrushGame * game)
 {
     u8 i;
 
     for (i = 0; i < game->playerCount; ++i)
     {
-        PutWindowTilemap(game->spritesManager.unk83[i]);
+        PutWindowTilemap(game->spritesManager.playerNameWindowIds[i]);
         if (i == game->localId)
         {
             AddTextPrinterParameterized4(
-                game->spritesManager.unk83[i],
+                game->spritesManager.playerNameWindowIds[i],
                 2,
                 36 - GetStringWidth(2, BERRYCRUSH_PLAYER_NAME(game, i), 0) / 2u,
                 1,
@@ -1184,7 +1184,7 @@ static void sub_814EBB0(struct BerryCrushGame * game)
         else
         {
             AddTextPrinterParameterized4(
-                game->spritesManager.unk83[i],
+                game->spritesManager.playerNameWindowIds[i],
                 2,
                 36 - GetStringWidth(2, BERRYCRUSH_PLAYER_NAME(game, i), 0) / 2u,
                 1,
@@ -1195,12 +1195,12 @@ static void sub_814EBB0(struct BerryCrushGame * game)
                 BERRYCRUSH_PLAYER_NAME(game, i)
             );
         }
-        CopyWindowToVram(game->spritesManager.unk83[i], COPYWIN_BOTH);
+        CopyWindowToVram(game->spritesManager.playerNameWindowIds[i], COPYWIN_BOTH);
     }
     CopyBgTilemapBufferToVram(0);
 }
 
-static void sub_814EC80(struct BerryCrushGame * game)
+static void LoadPlayerNameWindowFrames(struct BerryCrushGame * game)
 {
     u8 i = 0;
     const u32 *r0 = gUnknown_8EB0ADC;
@@ -1228,7 +1228,7 @@ static void sub_814EC80(struct BerryCrushGame * game)
     CopyBgTilemapBufferToVram(3);
 }
 
-static void sub_814ECE0(struct BerryCrushGame * game)
+static void BerryCrush_LoadSpritesGfxAndCreateSprites(struct BerryCrushGame * game)
 {
     u8 i = 0;
     u8 spriteId;
@@ -1263,8 +1263,8 @@ static void sub_814ECE0(struct BerryCrushGame * game)
     {
         spriteId = CreateSprite(
             &sSpriteTemplate_BerryCrushPowderSparkles,
-            gUnknown_846F2D6[i][0] + 120,
-            gUnknown_846F2D6[i][1] + 136,
+            sSparklesSpriteCoords[i][0] + 120,
+            sSparklesSpriteCoords[i][1] + 136,
             6
         );
         game->spritesManager.sparkleSprites[i] = &gSprites[spriteId];
@@ -1293,9 +1293,9 @@ static void sub_814ECE0(struct BerryCrushGame * game)
             BerryCrush_HideTimerSprites(&game->spritesManager);
 }
 
-static void sub_814EF10(struct BerryCrushGame * r5)
+static void BerryCrush_DestroySprites(struct BerryCrushGame * game)
 {
-    u8 r4 = 0;
+    u8 i = 0;
 
     FreeSpriteTilesByTag(4);
     FreeSpriteTilesByTag(3);
@@ -1304,17 +1304,17 @@ static void sub_814EF10(struct BerryCrushGame * r5)
     FreeSpritePaletteByTag(4);
     FreeSpritePaletteByTag(2);
     FreeSpritePaletteByTag(1);
-    for (; r4 < NELEMS(r5->spritesManager.timerSprites); ++r4)
-        DestroySprite(r5->spritesManager.timerSprites[r4]);
+    for (; i < NELEMS(game->spritesManager.timerSprites); ++i)
+        DestroySprite(game->spritesManager.timerSprites[i]);
     DigitObjUtil_DeletePrinter(2);
     DigitObjUtil_DeletePrinter(1);
     DigitObjUtil_DeletePrinter(0);
-    for (r4 = 0; r4 < NELEMS(r5->spritesManager.sparkleSprites); ++r4)
-        DestroySprite(r5->spritesManager.sparkleSprites[r4]);
-    for (r4 = 0; r4 < r5->playerCount; ++r4)
-        DestroySprite(r5->spritesManager.impactSprites[r4]);
-    if (r5->spritesManager.coreSprite->inUse)
-        DestroySprite(r5->spritesManager.coreSprite);
+    for (i = 0; i < NELEMS(game->spritesManager.sparkleSprites); ++i)
+        DestroySprite(game->spritesManager.sparkleSprites[i]);
+    for (i = 0; i < game->playerCount; ++i)
+        DestroySprite(game->spritesManager.impactSprites[i]);
+    if (game->spritesManager.coreSprite->inUse)
+        DestroySprite(game->spritesManager.coreSprite);
 }
 
 static void SpriteCB_BerryCrushImpact(struct Sprite * sprite)
@@ -1326,43 +1326,43 @@ static void SpriteCB_BerryCrushImpact(struct Sprite * sprite)
     }
 }
 
-static void sub_814EFFC(struct Sprite * sprite)
+static void SpriteCB_EndSparkles(struct Sprite * sprite)
 {
-    u8 r1 = 0;
-    SpriteCallback r5 = SpriteCallbackDummy;
+    u8 i = 0;
+    SpriteCallback cb = SpriteCallbackDummy;
 
-    for (; r1 < NELEMS(sprite->data); ++r1)
-        sprite->data[r1] = 0;
+    for (; i < NELEMS(sprite->data); ++i)
+        sprite->data[i] = 0;
     sprite->pos2.x = 0;
     sprite->pos2.y = 0;
     sprite->invisible = TRUE;
     sprite->animPaused = TRUE;
-    sprite->callback = r5;
+    sprite->callback = cb;
 }
 
-static void sub_814F044(struct Sprite * sprite)
+static void SpriteCB_Sparkles(struct Sprite * sprite)
 {
-    s16 *r4 = sprite->data;
+    s16 *data = sprite->data;
 
-    r4[1] += r4[2];
-    sprite->pos2.y += r4[1] >> 8;
-    if (r4[7] & 0x8000)
+    data[1] += data[2];
+    sprite->pos2.y += data[1] >> 8;
+    if (data[7] & 0x8000)
     {
-        sprite->data[0] += r4[3];
-        r4[4] += r4[5];
-        sprite->pos2.x = Sin(r4[4] >> 7, r4[6]);
-        if (r4[7] & 0x8000 && r4[4] >> 7 > 126)
+        sprite->data[0] += data[3];
+        data[4] += data[5];
+        sprite->pos2.x = Sin(data[4] >> 7, data[6]);
+        if (data[7] & 0x8000 && data[4] >> 7 > 126)
         {
             sprite->pos2.x = 0;
-            r4[7] &= 0x7FFF;
+            data[7] &= 0x7FFF;
         }
     }
-    sprite->pos1.x = r4[0] >> 7;
-    if (sprite->pos1.y + sprite->pos2.y > (r4[7] & 0x7FFF))
-        sprite->callback = sub_814EFFC;
+    sprite->pos1.x = data[0] >> 7;
+    if (sprite->pos1.y + sprite->pos2.y > (data[7] & 0x7FFF))
+        sprite->callback = SpriteCB_EndSparkles;
 }
 
-static void sub_814F0D8(struct Sprite * sprite)
+static void SpriteCallback_Sparkles(struct Sprite * sprite)
 {
     s16 *r7 = sprite->data;
     s16 r4, r5;
@@ -1384,7 +1384,7 @@ static void sub_814F0D8(struct Sprite * sprite)
     r7[7] |= 0x8000;
     sprite->pos2.y = r8;
     sprite->pos2.x = r8;
-    sprite->callback = sub_814F044;
+    sprite->callback = SpriteCB_Sparkles;
     sprite->animPaused = FALSE;
     sprite->invisible = FALSE;
 }

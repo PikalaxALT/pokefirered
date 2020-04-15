@@ -132,7 +132,7 @@ struct BerryCrushGame_138
     u8 unk80;
     u8 filler81;
     u8 windowId;
-    u8 unk83[5];
+    u8 playerNameWindowIds[5];
 };
 
 struct BerryCrushGame
@@ -197,17 +197,17 @@ void BerryCrush_UnsetVBlankCallback(void);
 void BerryCrush_UpdateSav2Records(void);
 void BerryCrush_RunOrScheduleCommand(u16 command, u8 runMode, u8 *params);
 void BerryCrush_SetPaletteFadeParams(u8 *params, bool8 communicateAfter, u32 selectedPals, s8 delay, u8 startY, u8 targetY, u16 palette);
-int sub_814D9CC(struct BerryCrushGame *arg0);
+int BerryCrush_UpdateTimerDisplayAndCoreHeight(struct BerryCrushGame * game);
 int BerryCrush_InitBgs(void);
 int BerryCrush_TeardownBgs(void);
-void BerryCrush_CreateBerrySprites(struct BerryCrushGame *arg0, struct BerryCrushGame_138 *arg1);
-void BerryCrushFreeBerrySpriteGfx(struct BerryCrushGame *arg0, struct BerryCrushGame_138 *arg1);
-void sub_814DC5C(struct BerryCrushGame *arg0, struct BerryCrushGame_138 *arg1);
-bool32 sub_814DE50(struct BerryCrushGame *arg0, struct BerryCrushGame_138 *arg1);
-bool32 sub_814E644(struct BerryCrushGame *arg0, struct BerryCrushGame_138 *arg1);
-void sub_814E80C(struct BerryCrushGame *arg0);
-void sub_814DA04(struct BerryCrushGame *arg0);
-void BerryCrush_HideTimerSprites(struct BerryCrushGame_138 *arg0);
+void BerryCrush_CreateBerrySprites(struct BerryCrushGame * game, struct BerryCrushGame_138 * manager);
+void BerryCrushFreeBerrySpriteGfx(struct BerryCrushGame * game, struct BerryCrushGame_138 * manager);
+void UpdateImpactAndSparkleSpriteAnims(struct BerryCrushGame * game, struct BerryCrushGame_138 * manager);
+bool32 AreAllImpactAndSparkleSpriteAnimsFinished(struct BerryCrushGame * game, struct BerryCrushGame_138 * manager);
+bool32 BerryCrush_PrintResults(struct BerryCrushGame * game, struct BerryCrushGame_138 * manager);
+void BerryCrush_DismantleResultsWindow(struct BerryCrushGame * game);
+void BerryCrush_ResetCorePosition(struct BerryCrushGame * game);
+void BerryCrush_HideTimerSprites(struct BerryCrushGame_138 * manager);
 void SpriteCB_DropBerryIntoCrusher(struct Sprite * sprite);
 void ShowBerryCrushRankings(void);
 
