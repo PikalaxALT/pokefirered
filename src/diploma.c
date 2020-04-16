@@ -29,21 +29,21 @@ static void Task_WaitForExit(u8);
 static void Task_DiplomaInit(u8);
 static void Task_DiplomaReturnToOverworld(u8);
 
-static const u32 gUnknown_84147C0[] = INCBIN_U32("graphics/diploma/unk_84147C0.4bpp.lz");
-static const u32 gUnknown_84154E8[] = INCBIN_U32("graphics/diploma/unk_84154E8.bin.lz");
-static const u16 gUnknown_8415954[] = INCBIN_U16("graphics/diploma/unk_8415954.gbapal");
+static const u32 sDiplomaTiles[] = INCBIN_U32("graphics/diploma/unk_84147C0.4bpp.lz");
+static const u32 sDiplomaMap[] = INCBIN_U32("graphics/diploma/unk_84154E8.bin.lz");
+static const u16 sDiplomaPal[] = INCBIN_U16("graphics/diploma/unk_8415954.gbapal");
 
-static const u8 gUnknown_8415994[] = _("{HIGHLIGHT TRANSPARENT}プレイヤー");
-static const u8 gUnknown_841599D[] = _("{HIGHLIGHT TRANSPARENT}さま");
-static const u8 gUnknown_84159A3[] = _("{HIGHLIGHT TRANSPARENT}ホウエン");
-static const u8 gUnknown_84159AB[] = _("{HIGHLIGHT TRANSPARENT}ぜんこく");
-static const u8 gUnknown_84159B3[] = _("{HIGHLIGHT TRANSPARENT}　　　　　ポケモンずかんを\nみごと　かんせい　させた\nいだいなこうせきを　たたえ\nここに　しょうめい　します");
-static const u8 gUnknown_84159ED[] = _("{COLOR RED}{HIGHLIGHT TRANSPARENT}ゲームフリーク");
-static const u8 gUnknown_84159FB[] = _("{COLOR RED}{HIGHLIGHT TRANSPARENT}");
+static const u8 sText_JP_Player[] = _("{HIGHLIGHT TRANSPARENT}プレイヤー");
+static const u8 sText_JP_sama[] = _("{HIGHLIGHT TRANSPARENT}さま");
+static const u8 sText_JP_Hoenn[] = _("{HIGHLIGHT TRANSPARENT}ホウエン");
+static const u8 sText_JP_NationalDex[] = _("{HIGHLIGHT TRANSPARENT}ぜんこく");
+static const u8 sText_JP_CompletedTheDex[] = _("{HIGHLIGHT TRANSPARENT}　　　　　ポケモンずかんを\nみごと　かんせい　させた\nいだいなこうせきを　たたえ\nここに　しょうめい　します");
+static const u8 sText_JP_GameFreak[] = _("{COLOR RED}{HIGHLIGHT TRANSPARENT}ゲームフリーク");
+static const u8 sText_JP_Dummy[] = _("{COLOR RED}{HIGHLIGHT TRANSPARENT}");
 
-static const ALIGNED(4) u8 gUnknown_8415A04[3] = {0, 2, 3};
+static const ALIGNED(4) u8 sTextColor[3] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_DARK_GREY, TEXT_COLOR_LIGHT_GREY};
 
-static const struct BgTemplate gUnknown_8415A08[] = {
+static const struct BgTemplate sBgTemplates[] = {
     {
         .bg = 0,
         .charBaseIndex = 0,
@@ -63,7 +63,7 @@ static const struct BgTemplate gUnknown_8415A08[] = {
     }
 };
 
-static const struct WindowTemplate gUnknown_8415A10[] = {
+static const struct WindowTemplate sWindowTemplates[] = {
     {
         .bg = 0,
         .tilemapLeft = 0,
@@ -118,7 +118,7 @@ static void Task_DiplomaInit(u8 taskId)
         }
         break;
     case 3:
-        CopyToBgTilemapBuffer(1, gUnknown_84154E8, 0, 0);
+        CopyToBgTilemapBuffer(1, sDiplomaMap, 0, 0);
         break;
     case 4:
         if (HasAllMons())
@@ -204,7 +204,7 @@ static void DiplomaVblankHandler(void)
     DmaClear16(3, (void *)PLTT, PLTT_SIZE);
     SetGpuReg(REG_OFFSET_DISPCNT, 0);
     ResetBgsAndClearDma3BusyFlags(0);
-    InitBgsFromTemplates(0, gUnknown_8415A08, 2);
+    InitBgsFromTemplates(0, sBgTemplates, 2);
     ChangeBgX(0, 0, 0);
     ChangeBgY(0, 0, 0);
     ChangeBgX(1, 0, 0);
@@ -213,7 +213,7 @@ static void DiplomaVblankHandler(void)
     ChangeBgY(2, 0, 0);
     ChangeBgX(3, 0, 0);
     ChangeBgY(3, 0, 0);
-    InitWindows(gUnknown_8415A10);
+    InitWindows(sWindowTemplates);
     DeactivateAllTextPrinters();
     SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_1D_MAP | DISPCNT_OBJ_ON);
     SetBgTilemapBuffer(1, gDiploma->tilemapBuffer);
@@ -231,7 +231,7 @@ static u8 DiplomaLoadGfx(void)
         ResetTempTileDataBuffers();
         break;
     case 1:
-        DecompressAndCopyTileDataToVram(1, gUnknown_84147C0, 0, 0, 0);
+        DecompressAndCopyTileDataToVram(1, sDiplomaTiles, 0, 0, 0);
         break;
     case 2:
         if (!(FreeTempTileDataBuffersIfPossible() == 1))
@@ -240,7 +240,7 @@ static u8 DiplomaLoadGfx(void)
         }
         return 0;
     case 3:
-        LoadPalette(gUnknown_8415954, 0, 0x40);
+        LoadPalette(sDiplomaPal, 0, 0x40);
     default:
         return 1;
     }
@@ -265,10 +265,10 @@ static void DiplomaPrintText(void)
     FillWindowPixelBuffer(0, 0);
     DynamicPlaceholderTextUtil_ExpandPlaceholders(arr, gUnknown_841B60E);
     width = GetStringWidth(2, arr, -1);
-    AddTextPrinterParameterized3(0, 2, 0x78 - (width / 2), 4, gUnknown_8415A04, -1, arr);
+    AddTextPrinterParameterized3(0, 2, 0x78 - (width / 2), 4, sTextColor, -1, arr);
     DynamicPlaceholderTextUtil_ExpandPlaceholders(arr, gUnknown_841B619);
     width = GetStringWidth(2, arr, -1);
-    AddTextPrinterParameterized3(0, 0x2, 0x78 - (width / 2), 0x1E, gUnknown_8415A04, -1, arr);
-    AddTextPrinterParameterized3(0, 0x2, 0x78, 0x69, gUnknown_8415A04, 0, gUnknown_841B684);
+    AddTextPrinterParameterized3(0, 0x2, 0x78 - (width / 2), 0x1E, sTextColor, -1, arr);
+    AddTextPrinterParameterized3(0, 0x2, 0x78, 0x69, sTextColor, 0, gUnknown_841B684);
     PutWindowTilemap(0);
 }
