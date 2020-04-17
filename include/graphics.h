@@ -4902,7 +4902,7 @@ extern const u32 gUnknown_8E98398[];
 extern const u32 gUnknown_8E98518[];
 extern const u32 gNamingScreenMenu_Gfx[];
 extern const u16 gRivalSpritePalette[];
-extern const u16 gUnknown_8E97FE4[];
+extern const u16 gNamingScreenMenu_DynamicTextColor1[];
 extern const u16 gNamingScreenMenu_Pal[];
 extern const u16 gUnknown_8E98858[];
 extern const u16 gUnknown_8E98A38[];
