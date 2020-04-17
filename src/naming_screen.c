@@ -624,10 +624,10 @@ static u8 GetCurrentPage(void)
 
 static bool8 MainState_BeginFadeIn(void)
 {
-    DecompressToBgTilemapBuffer(3, gUnknown_8E982BC);
+    DecompressToBgTilemapBuffer(3, gNamingScreenBg3Tilemap);
     sNamingScreenData->currentPage = KBPAGE_LETTERS_UPPER;
-    DecompressToBgTilemapBuffer(2, gUnknown_8E98458);
-    DecompressToBgTilemapBuffer(1, gUnknown_8E98398);
+    DecompressToBgTilemapBuffer(2, gNamingScreenKeyboardPageTilemap_lower);
+    DecompressToBgTilemapBuffer(1, gNamingScreenKeyboardPageTilemap_UPPER);
     PrintKeyboardOnWindow(sNamingScreenData->windows[1], KBPAGE_LETTERS_LOWER);
     PrintKeyboardOnWindow(sNamingScreenData->windows[0], KBPAGE_LETTERS_UPPER);
     PrintBufferCharactersOnScreen();
@@ -973,7 +973,7 @@ static void Task_CursorPaletteAnim(u8 taskId)
     }
 }
 
-static u16 GetCursorSpriteColorIndex(u8 a)
+static u16 GetCursorSpriteColorIndex(u8 tag)
 {
     const u16 arr[] =
     {
@@ -983,7 +983,7 @@ static u16 GetCursorSpriteColorIndex(u8 a)
         [CURSOR_TAG_KBD]  = IndexOfSpritePaletteTag(PAL_TAG_START_OK) * 16 + 0x101, // kbd
     };
 
-    return arr[a];
+    return arr[tag];
 }
 
 static void SetCursorColorToUnfadedBuffer(u8 tag)
@@ -1663,6 +1663,10 @@ static void HandleDpadMovement(struct Task *task)
 #undef tKeyboardEvent
 #undef tKbFunctionKey
 
+//--------------------------------------------------
+// Printing
+//--------------------------------------------------
+
 static void PrintTitleFunction_NoMon(void)
 {
     FillWindowPixelBuffer(sNamingScreenData->windows[3], PIXEL_FILL(1));
@@ -1909,9 +1913,9 @@ static void PrintKeyboardOnWindow(u8 window, u8 page)
 }
 
 static const u32 *const sKeyboardPageTilemapPtrs[] = {
-    gUnknown_8E98398,
-    gUnknown_8E98458,
-    gUnknown_8E98518
+    gNamingScreenKeyboardPageTilemap_UPPER,
+    gNamingScreenKeyboardPageTilemap_lower,
+    gNamingScreenKeyboardPageTilemap_others
 };
 
 static void KeyboardSwap_DrawNewPage(void)
@@ -2432,20 +2436,19 @@ static const u8 *const sNamingScreenKeyboardText[KBPAGE_COUNT][KBROW_COUNT] = {
     },
 };
 
-// FIXME: Sync with Emerald
 static const struct SpriteSheet sSpriteSheetArray[] = {
-    {gUnknown_8E98858, 0x1E0,  TILE_TAG_B_BACK},
-    {gUnknown_8E98A38, 0x1E0,  TILE_TAG_START_OK},
-    {gUnknown_8E985D8, 0x280,  TILE_TAG_SELECT_FRAME},
-    {gUnknown_8E98FD8, 0x100,  TILE_TAG_SELECT_BACKING},
-    {gUnknown_8E98C18, 0x060,  TILE_TAG_UPPER},
-    {gUnknown_8E98CB8, 0x060,  TILE_TAG_LOWER},
-    {gUnknown_8E98D58, 0x060,  TILE_TAG_OTHERS},
-    {gUnknown_8E98DF8, 0x080,  TILE_TAG_KEY_CURSOR},
-    {gUnknown_8E98E98, 0x080,  TILE_TAG_CURSOR_BLINK_1},
-    {gUnknown_8E98F38, 0x080,  TILE_TAG_CURSOR_BLINK_2},
-    {gUnknown_8E990D8, 0x020,  TILE_TAG_INPUT_ARROW},
-    {gUnknown_8E990F8, 0x020,  TILE_TAG_UNDERSCORE},
+    {gNamingScreenSpriteTiles_BBack, 0x1E0,  TILE_TAG_B_BACK},
+    {gNamingScreenSpriteTiles_StartOk, 0x1E0,  TILE_TAG_START_OK},
+    {gNamingScreenSpriteTiles_SelectFrame, 0x280,  TILE_TAG_SELECT_FRAME},
+    {gNamingScreenSpriteTiles_SelectBacking, 0x100,  TILE_TAG_SELECT_BACKING},
+    {gNamingScreenSpriteTiles_Upper, 0x060,  TILE_TAG_UPPER},
+    {gNamingScreenSpriteTiles_Lower, 0x060,  TILE_TAG_LOWER},
+    {gNamingScreenSpriteTiles_Others, 0x060,  TILE_TAG_OTHERS},
+    {gNamingScreenSpriteTiles_KeyCursor, 0x080,  TILE_TAG_KEY_CURSOR},
+    {gNamingScreenSpriteTiles_CursorBlink1, 0x080,  TILE_TAG_CURSOR_BLINK_1},
+    {gNamingScreenSpriteTiles_CursorBlink2, 0x080,  TILE_TAG_CURSOR_BLINK_2},
+    {gNamingScreenSpriteTiles_InputArrow, 0x020,  TILE_TAG_INPUT_ARROW},
+    {gNamingScreenSpriteTiles_Underscore, 0x020,  TILE_TAG_UNDERSCORE},
     {} // terminator
 };
 

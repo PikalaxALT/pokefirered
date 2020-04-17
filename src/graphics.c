@@ -1190,32 +1190,32 @@ const u16 gUnknown_8E980A4[] = INCBIN_U16("graphics/interface/naming_screen_8E98
 const u16 gUnknown_8E980C4[] = INCBIN_U16("graphics/interface/naming_screen_8E980C4.gbapal");
 
 const u32 gNamingScreenMenu_Gfx[] = INCBIN_U32("graphics/interface/naming_screen_menu.4bpp.lz");
-const u32 gUnknown_8E982BC[] = INCBIN_U32("graphics/interface/naming_screen_menu.bin.lz");
+const u32 gNamingScreenBg3Tilemap[] = INCBIN_U32("graphics/interface/naming_screen_menu.bin.lz");
 
 // Keyboard tilemaps
-const u32 gUnknown_8E98398[] = INCBIN_U32("graphics/interface/naming_screen_E98398.bin.lz");
-const u32 gUnknown_8E98458[] = INCBIN_U32("graphics/interface/naming_screen_E98458.bin.lz");
-const u32 gUnknown_8E98518[] = INCBIN_U32("graphics/interface/naming_screen_E98518.bin.lz");
+const u32 gNamingScreenKeyboardPageTilemap_UPPER[] = INCBIN_U32("graphics/interface/naming_screen_E98398.bin.lz");
+const u32 gNamingScreenKeyboardPageTilemap_lower[] = INCBIN_U32("graphics/interface/naming_screen_E98458.bin.lz");
+const u32 gNamingScreenKeyboardPageTilemap_others[] = INCBIN_U32("graphics/interface/naming_screen_E98518.bin.lz");
 
 // Sprite tiles
-const u32 gUnknown_8E985D8[] = INCBIN_U32("graphics/interface/naming_screen_8E985D8.4bpp");
-const u32 gUnknown_8E98858[] = INCBIN_U32("graphics/interface/naming_screen_8E98858.4bpp");
-const u32 gUnknown_8E98A38[] = INCBIN_U32("graphics/interface/naming_screen_8E98A38.4bpp");
-const u32 gUnknown_8E98C18[] = INCBIN_U32("graphics/interface/naming_screen_8E98C18.4bpp");
+const u32 gNamingScreenSpriteTiles_SelectFrame[] = INCBIN_U32("graphics/interface/naming_screen_8E985D8.4bpp");
+const u32 gNamingScreenSpriteTiles_BBack[] = INCBIN_U32("graphics/interface/naming_screen_8E98858.4bpp");
+const u32 gNamingScreenSpriteTiles_StartOk[] = INCBIN_U32("graphics/interface/naming_screen_8E98A38.4bpp");
+const u32 gNamingScreenSpriteTiles_Upper[] = INCBIN_U32("graphics/interface/naming_screen_8E98C18.4bpp");
 const u32 gap_8E98C78[16] = {};
-const u32 gUnknown_8E98CB8[] = INCBIN_U32("graphics/interface/naming_screen_8E98CB8.4bpp");
+const u32 gNamingScreenSpriteTiles_Lower[] = INCBIN_U32("graphics/interface/naming_screen_8E98CB8.4bpp");
 const u32 gap_8E98D18[16] = {};
-const u32 gUnknown_8E98D58[] = INCBIN_U32("graphics/interface/naming_screen_8E98D58.4bpp");
+const u32 gNamingScreenSpriteTiles_Others[] = INCBIN_U32("graphics/interface/naming_screen_8E98D58.4bpp");
 const u32 gap_8E98DB8[16] = {};
-const u32 gUnknown_8E98DF8[] = INCBIN_U32("graphics/interface/naming_screen_8E98DF8.4bpp");
+const u32 gNamingScreenSpriteTiles_KeyCursor[] = INCBIN_U32("graphics/interface/naming_screen_8E98DF8.4bpp");
 const u32 gap_8E98E78[8] = {};
-const u32 gUnknown_8E98E98[] = INCBIN_U32("graphics/interface/naming_screen_8E98E98.4bpp");
+const u32 gNamingScreenSpriteTiles_CursorBlink1[] = INCBIN_U32("graphics/interface/naming_screen_8E98E98.4bpp");
 const u32 gap_8E98F18[8] = {};
-const u32 gUnknown_8E98F38[] = INCBIN_U32("graphics/interface/naming_screen_8E98F38.4bpp");
+const u32 gNamingScreenSpriteTiles_CursorBlink2[] = INCBIN_U32("graphics/interface/naming_screen_8E98F38.4bpp");
 const u32 gap_8E98FB8[8] = {};
-const u32 gUnknown_8E98FD8[] = INCBIN_U32("graphics/interface/naming_screen_8E98FD8.4bpp");
-const u32 gUnknown_8E990D8[] = INCBIN_U32("graphics/interface/naming_screen_8E990D8.4bpp");
-const u32 gUnknown_8E990F8[] = INCBIN_U32("graphics/interface/naming_screen_8E990F8.4bpp");
+const u32 gNamingScreenSpriteTiles_SelectBacking[] = INCBIN_U32("graphics/interface/naming_screen_8E98FD8.4bpp");
+const u32 gNamingScreenSpriteTiles_InputArrow[] = INCBIN_U32("graphics/interface/naming_screen_8E990D8.4bpp");
+const u32 gNamingScreenSpriteTiles_Underscore[] = INCBIN_U32("graphics/interface/naming_screen_8E990F8.4bpp");
 
 const u8 gUnknown_8E99118[] = INCBIN_U8("graphics/tm_case/unk_8E99118.4bpp");
 

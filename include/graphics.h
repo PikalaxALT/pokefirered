@@ -4896,26 +4896,26 @@ extern const u32 gEasyChatSelectGroupHelp_Tiles[];
 extern const u32 gEasyChatModeIcons_Tiles[];
 
 // naming_screen
-extern const u32 gUnknown_8E982BC[];
-extern const u32 gUnknown_8E98458[];
-extern const u32 gUnknown_8E98398[];
-extern const u32 gUnknown_8E98518[];
+extern const u32 gNamingScreenBg3Tilemap[];
+extern const u32 gNamingScreenKeyboardPageTilemap_lower[];
+extern const u32 gNamingScreenKeyboardPageTilemap_UPPER[];
+extern const u32 gNamingScreenKeyboardPageTilemap_others[];
 extern const u32 gNamingScreenMenu_Gfx[];
 extern const u16 gRivalSpritePalette[];
 extern const u16 gNamingScreenMenu_DynamicTextColor1[];
 extern const u16 gNamingScreenMenu_Pal[];
-extern const u16 gUnknown_8E98858[];
-extern const u16 gUnknown_8E98A38[];
-extern const u16 gUnknown_8E985D8[];
-extern const u16 gUnknown_8E98FD8[];
-extern const u16 gUnknown_8E98C18[];
-extern const u16 gUnknown_8E98CB8[];
-extern const u16 gUnknown_8E98D58[];
-extern const u16 gUnknown_8E98DF8[];
-extern const u16 gUnknown_8E98E98[];
-extern const u16 gUnknown_8E98F38[];
-extern const u16 gUnknown_8E990D8[];
-extern const u16 gUnknown_8E990F8[];
+extern const u16 gNamingScreenSpriteTiles_BBack[];
+extern const u16 gNamingScreenSpriteTiles_StartOk[];
+extern const u16 gNamingScreenSpriteTiles_SelectFrame[];
+extern const u16 gNamingScreenSpriteTiles_SelectBacking[];
+extern const u16 gNamingScreenSpriteTiles_Upper[];
+extern const u16 gNamingScreenSpriteTiles_Lower[];
+extern const u16 gNamingScreenSpriteTiles_Others[];
+extern const u16 gNamingScreenSpriteTiles_KeyCursor[];
+extern const u16 gNamingScreenSpriteTiles_CursorBlink1[];
+extern const u16 gNamingScreenSpriteTiles_CursorBlink2[];
+extern const u16 gNamingScreenSpriteTiles_InputArrow[];
+extern const u16 gNamingScreenSpriteTiles_Underscore[];
 
 // pokemon_storage_system
 extern const u32 gPSSMenu_Gfx[];
