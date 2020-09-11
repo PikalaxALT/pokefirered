@@ -3690,17 +3690,17 @@ static void Task_MoveDeoxysRock_Step(u8 taskId)
     }
 }
 
-static void Task_FldEffUnk44(u8 taskId);
-static void Unk44Effect_0(s16 *data, u8 taskId);
-static void Unk44Effect_1(s16 *data, u8 taskId);
-static void Unk44Effect_2(s16 *data, u8 taskId);
-static void sub_8087CFC(struct Sprite * sprite);
-static void SpriteCB_FldEffUnk44(struct Sprite * sprite);
+static void Task_FldEffAppearDeoxys(u8 taskId);
+static void AppearDeoxysEffect_Setup(s16 *data, u8 taskId);
+static void AppearDeoxysEffect_RunShakeScreen_ExplodeRock(s16 *data, u8 taskId);
+static void AppearDeoxysEffect_Wait_Cleanup(s16 *data, u8 taskId);
+static void FldEffAppearDeoxys_ExplodeRock(struct Sprite * sprite);
+static void SpriteCB_ExplodeRock(struct Sprite * sprite);
 
 static void (*const sUnk44EffectFuncs[])(s16 *data, u8 taskId) = {
-    Unk44Effect_0,
-    Unk44Effect_1,
-    Unk44Effect_2
+    AppearDeoxysEffect_Setup,
+    AppearDeoxysEffect_RunShakeScreen_ExplodeRock,
+    AppearDeoxysEffect_Wait_Cleanup
 };
 
 static const struct SpriteFrameImage sImages_FldEffUnk44[] = {
@@ -3744,8 +3744,16 @@ static const struct SpriteTemplate sUnknown_83CC2A0 = {
     .anims = sAnimCmdTable_FldEffUnk44,
     .images = sImages_FldEffUnk44,
     .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCB_FldEffUnk44
+    .callback = SpriteCB_ExplodeRock
 };
+
+#define tState          data[1]
+#define tObjectId       data[2]
+#define tCounter        data[3]
+#define tLinkedTask     data[5]
+#define tLocalId        data[6]
+#define tMapNum         data[7]
+#define tMapGroup       data[8]
 
 u32 FldEff_Unk44(void)
 {
@@ -3753,20 +3761,20 @@ u32 FldEff_Unk44(void)
     u8 objectEventIdBuffer;
     if (!TryGetObjectEventIdByLocalIdAndMap(gFieldEffectArguments[0], gFieldEffectArguments[1], gFieldEffectArguments[2], &objectEventIdBuffer))
     {
-        taskId = CreateTask(Task_FldEffUnk44, 0x50);
-        gTasks[taskId].data[2] = objectEventIdBuffer;
-        gTasks[taskId].data[6] = gFieldEffectArguments[0];
-        gTasks[taskId].data[7] = gFieldEffectArguments[1];
-        gTasks[taskId].data[8] = gFieldEffectArguments[2];
+        taskId = CreateTask(Task_FldEffAppearDeoxys, 0x50);
+        gTasks[taskId].tObjectId = objectEventIdBuffer;
+        gTasks[taskId].tLocalId = gFieldEffectArguments[0];
+        gTasks[taskId].tMapNum = gFieldEffectArguments[1];
+        gTasks[taskId].tMapGroup = gFieldEffectArguments[2];
     }
     else
     {
-        FieldEffectActiveListRemove(FLDEFF_UNK_44);
+        FieldEffectActiveListRemove(FLDEFF_APPEAR_DEOXYS);
     }
     return FALSE;
 }
 
-static void sub_8087B14(u8 taskId)
+static void Task_FldEffAppearDeoxys_ShakeScreen(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
     if (data[7] != 0)
@@ -3800,55 +3808,55 @@ static void sub_8087B14(u8 taskId)
         DestroyTask(taskId);
 }
 
-static void sub_8087BA8(u8 taskId)
+static void AppearDeoxys_EndShakeScreenEffect(u8 taskId)
 {
     gTasks[taskId].data[7] = 1;
 }
 
-static void Task_FldEffUnk44(u8 taskId)
+static void Task_FldEffAppearDeoxys(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
     InstallCameraPanAheadCallback();
     SetCameraPanningCallback(NULL);
-    sUnk44EffectFuncs[data[1]](data, taskId);
+    sUnk44EffectFuncs[tState](data, taskId);
 }
 
-static void Unk44Effect_0(s16 *data, u8 taskId)
+static void AppearDeoxysEffect_Setup(s16 *data, u8 taskId)
 {
-    u8 newTaskId = CreateTask(sub_8087B14, 90);
+    u8 newTaskId = CreateTask(Task_FldEffAppearDeoxys_ShakeScreen, 90);
     PlaySE(SE_THUNDER2);
-    data[5] = newTaskId;
-    data[1]++;
+    tLinkedTask = newTaskId;
+    tState++;
 }
 
-static void Unk44Effect_1(s16 *data, u8 taskId)
+static void AppearDeoxysEffect_RunShakeScreen_ExplodeRock(s16 *data, u8 taskId)
 {
-    if (++data[3] > 0x78)
+    if (++tCounter > 120)
     {
-        struct Sprite * sprite = &gSprites[gObjectEvents[data[2]].spriteId];
-        gObjectEvents[data[2]].invisible = TRUE;
+        struct Sprite * sprite = &gSprites[gObjectEvents[tObjectId].spriteId];
+        gObjectEvents[tObjectId].invisible = TRUE;
         BlendPalettes(0x0000FFFF, 0x10, RGB_WHITE);
-        BeginNormalPaletteFade(0x0000FFFF, 0, 0x10, 0, RGB_WHITE);
-        sub_8087CFC(sprite);
+        BeginNormalPaletteFade(0x0000FFFF, 0, 16, 0, RGB_WHITE);
+        FldEffAppearDeoxys_ExplodeRock(sprite);
         PlaySE(SE_THUNDER);
-        sub_8087BA8(data[5]);
-        data[3] = 0;
-        data[1]++;
+        AppearDeoxys_EndShakeScreenEffect(tLinkedTask);
+        tCounter = 0;
+        tState++;
     }
 }
 
-static void Unk44Effect_2(s16 *data, u8 taskId)
+static void AppearDeoxysEffect_Wait_Cleanup(s16 *data, u8 taskId)
 {
-    if (!gPaletteFade.active && !FuncIsActiveTask(sub_8087B14))
+    if (!gPaletteFade.active && !FuncIsActiveTask(Task_FldEffAppearDeoxys_ShakeScreen))
     {
         InstallCameraPanAheadCallback();
-        RemoveObjectEventByLocalIdAndMap(data[6], data[7], data[8]);
-        FieldEffectActiveListRemove(FLDEFF_UNK_44);
+        RemoveObjectEventByLocalIdAndMap(tLocalId, tMapNum, tMapGroup);
+        FieldEffectActiveListRemove(FLDEFF_APPEAR_DEOXYS);
         DestroyTask(taskId);
     }
 }
 
-static void sub_8087CFC(struct Sprite* sprite)
+static void FldEffAppearDeoxys_ExplodeRock(struct Sprite* sprite)
 {
     int i;
     int xPos = (s16)gTotalCameraPixelOffsetX + sprite->pos1.x + sprite->pos2.x;
@@ -3866,7 +3874,7 @@ static void sub_8087CFC(struct Sprite* sprite)
     }
 }
 
-static void SpriteCB_FldEffUnk44(struct Sprite* sprite)
+static void SpriteCB_ExplodeRock(struct Sprite* sprite)
 {
     switch (sprite->data[0])
     {
@@ -3887,9 +3895,17 @@ static void SpriteCB_FldEffUnk44(struct Sprite* sprite)
         sprite->pos1.y += 12;
         break;
     }
-    if (sprite->pos1.x < -4 || sprite->pos1.x > 0xF4 || sprite->pos1.y < -4 || sprite->pos1.y > 0xA4)
+    if (sprite->pos1.x < -4 || sprite->pos1.x > 244 || sprite->pos1.y < -4 || sprite->pos1.y > 164)
         DestroySprite(sprite);
 }
+
+#undef tMapGroup
+#undef tMapNum
+#undef tLocalId
+#undef tLinkedTask
+#undef tCounter
+#undef tObjectId
+#undef tState
 
 static void Task_FldEffUnk45(u8 taskId)
 {
