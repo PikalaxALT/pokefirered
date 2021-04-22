@@ -4,6 +4,17 @@
 #include "global.h"
 #include "menu_helpers.h"
 
+enum
+{
+    BMH_WIN_MONEYBOX = 0,
+    BMH_WIN_BAGQUANTITYBOX,
+    BMH_WIN_MESSAGEBOX,
+    BMH_WIN_BUYQUANTITYBOX,
+    BMH_WIN_ITEMLIST,
+    BMH_WIN_ITEMDESC,
+    BMH_WIN_TMHMMOVENAME,
+};
+
 #define QL_SHOPPING_NULL    0
 #define QL_SHOPPING_BUY     1
 #define QL_SHOPPING_SELL    2
@@ -11,7 +22,7 @@
 void CreatePokemartMenu(const u16 *itemsForSale);
 void CreateDecorationShop1Menu(const u16 *);
 void CreateDecorationShop2Menu(const u16 *);
-u8 GetMartUnk16_4(void);
+u8 GetMartMessageFontId(void);
 void RecordItemPurchase(u16 item, u16 quantity, u8 action);
 
 // buy_menu_helper
