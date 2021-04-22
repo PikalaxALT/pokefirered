@@ -582,7 +582,7 @@ static void BuyMenuPrintItemDescriptionAndShowItemIcon(s32 item, bool8 onInit, s
     if (onInit != TRUE)
         PlaySE(SE_SELECT);
 
-    if (item != INDEX_CANCEL)
+    if (item != LIST_CANCEL)
         description = ItemId_GetDescription(item);
     else
         description = gText_QuitShopping;
@@ -591,7 +591,7 @@ static void BuyMenuPrintItemDescriptionAndShowItemIcon(s32 item, bool8 onInit, s
     if (gShopData.martType != 1)
     {
         DestroyItemMenuIcon(gShopData.itemSlot ^ 1);
-        if (item != INDEX_CANCEL)
+        if (item != LIST_CANCEL)
             CreateItemMenuIcon(item, gShopData.itemSlot);
         else
             CreateItemMenuIcon(ITEM_N_A, gShopData.itemSlot);
@@ -612,7 +612,7 @@ static void BuyMenuPrintPriceInList(u8 windowId, s32 item, u8 y)
     s32 x;
     u8 *loc;
 
-    if (item != INDEX_CANCEL)
+    if (item != LIST_CANCEL)
     {
         ConvertIntToDecimalStringN(gStringVar1, itemid_get_market_price(item), 0, 4);
         x = 4 - StringLength(gStringVar1);
@@ -626,7 +626,7 @@ static void BuyMenuPrintPriceInList(u8 windowId, s32 item, u8 y)
 
 static void LoadTmHmNameInMart(s32 item)
 {
-    if (item != INDEX_CANCEL)
+    if (item != LIST_CANCEL)
     {
         ConvertIntToDecimalStringN(gStringVar1, item - ITEM_DEVON_SCOPE, 2, 2);
         StringCopy(gStringVar4, gOtherText_UnkF9_08_Clear_01);

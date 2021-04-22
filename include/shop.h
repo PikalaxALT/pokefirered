@@ -4,13 +4,9 @@
 #include "global.h"
 #include "menu_helpers.h"
 
-#define INDEX_CANCEL -2
-
 #define QL_SHOPPING_NULL    0
 #define QL_SHOPPING_BUY     1
 #define QL_SHOPPING_SELL    2
-
-extern EWRAM_DATA struct ItemSlot gUnknown_02039F80[3];
 
 void CreatePokemartMenu(const u16 *itemsForSale);
 void CreateDecorationShop1Menu(const u16 *);

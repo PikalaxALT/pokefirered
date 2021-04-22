@@ -765,7 +765,7 @@ static void BerryPouchItemPrintFunc(u8 windowId, s32 itemId, u8 y)
 {
     u16 unused;
     u16 itemQuantity;
-    if (itemId != -2 && sResources->listMenuNumItems != itemId)
+    if (itemId != LIST_CANCEL && sResources->listMenuNumItems != itemId)
     {
         unused = BagGetItemIdByPocketPosition(POCKET_BERRY_POUCH, itemId);
         itemQuantity = BagGetQuantityByPocketPosition(POCKET_BERRY_POUCH, itemId);
