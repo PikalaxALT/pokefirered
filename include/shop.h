@@ -6,13 +6,17 @@
 
 #define INDEX_CANCEL -2
 
+#define QL_SHOPPING_NULL    0
+#define QL_SHOPPING_BUY     1
+#define QL_SHOPPING_SELL    2
+
 extern EWRAM_DATA struct ItemSlot gUnknown_02039F80[3];
 
 void CreatePokemartMenu(const u16 *itemsForSale);
 void CreateDecorationShop1Menu(const u16 *);
 void CreateDecorationShop2Menu(const u16 *);
 u8 GetMartUnk16_4(void);
-void RecordItemPurchase(u16 a0, u16 a1, u8 a2);
+void RecordItemPurchase(u16 item, u16 quantity, u8 action);
 
 // buy_menu_helper
 void BuyMenuInitWindows(bool32 isSellingTM);

@@ -71,12 +71,12 @@ struct ShopData
 
 struct MartHistory
 {
-    /*0x00*/ u32 unk0;
-    /*0x04*/ u16 unk4;
-    /*0x06*/ u16 unk6;
+    /*0x00*/ u32 money;
+    /*0x04*/ u16 itemId;
+    /*0x06*/ u16 quantity;
     /*0x08*/ u8 unk8;
-    /*0x09*/ u8 unk9;
-    /*0x0A*/ u8 unkA;
+    /*0x09*/ bool8 isMultipleItems;
+    /*0x0A*/ u8 action;
     /*0x0B*/ u8 unkB;
 }; /* size = 12 */
 
@@ -999,7 +999,7 @@ static void BuyMenuTryMakePurchase(u8 taskId)
     {
         BuyMenuDisplayMessage(taskId, gText_HereYouGoThankYou, BuyMenuSubtractMoney);
         DebugFunc_PrintPurchaseDetails(taskId);
-        RecordItemPurchase(tItemId, tItemCount, 1);
+        RecordItemPurchase(tItemId, tItemCount, QL_SHOPPING_BUY);
     }
     else
     {
@@ -1070,45 +1070,47 @@ static void DebugFunc_PrintShopMenuHistoryBeforeClearMaybe(void)
 {
 }
 
-void RecordItemPurchase(u16 item, u16 quantity, u8 a2)
+void RecordItemPurchase(u16 item, u16 quantity, u8 action)
 {
     struct MartHistory *history;
-    
-    if (gShopMenuHistory[0].unkA == a2)
+
+    // Which history is being used for this action?
+    if (gShopMenuHistory[0].action == action)
     {
         history = &gShopMenuHistory[0];
     }
-    else if (gShopMenuHistory[1].unkA == a2)
+    else if (gShopMenuHistory[1].action == action)
     {
         history = &gShopMenuHistory[1];
     }
     else
     {
-        if (gShopMenuHistory[0].unkA == 0)
+        // Neither is currently in use, so allocate the first available
+        if (gShopMenuHistory[0].action == QL_SHOPPING_NULL)
             history = &gShopMenuHistory[0];
         else
             history = &gShopMenuHistory[1];
-        history->unkA = a2;
+        history->action = action;
     }
     
-    if (history->unk4 != 0)
+    if (history->itemId != ITEM_NONE)
     {
-        history->unk9 = 1;
+        history->isMultipleItems = TRUE;
     }
     
-    history->unk4 = item;
-    if (history->unk6 < 999)
+    history->itemId = item;
+    if (history->quantity < 999)
     {
-        history->unk6 += quantity;
-        if (history->unk6 > 999)
-            history->unk6 = 999;
+        history->quantity += quantity;
+        if (history->quantity > 999)
+            history->quantity = 999;
     }
     
-    if (history->unk0 < 999999)
+    if (history->money < 999999)
     {
-        history->unk0 += (itemid_get_market_price(item) >> (a2 - 1)) * quantity;
-        if (history->unk0 > 999999)
-            history->unk0 = 999999;
+        history->money += (itemid_get_market_price(item) >> (action - 1)) * quantity;
+        if (history->money > 999999)
+            history->money = 999999;
     }    
 }
 
@@ -1116,11 +1118,11 @@ static void RecordQuestLogItemPurchase(void)
 {
     u16 v;
 
-    v = gShopMenuHistory[0].unkA;
+    v = gShopMenuHistory[0].action;
     if (v != 0)
         SetQuestLogEvent(v + QL_EVENT_USED_POKEMART, (const u16 *)&gShopMenuHistory[0]);
     
-    v = gShopMenuHistory[1].unkA;
+    v = gShopMenuHistory[1].action;
     if (v != 0)
         SetQuestLogEvent(v + QL_EVENT_USED_POKEMART, (const u16 *)&gShopMenuHistory[1]);
 }

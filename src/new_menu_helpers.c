@@ -145,14 +145,13 @@ static const struct FontInfo gFontInfos[] =
 
 static const u8 gMenuCursorDimensions[][2] = 
 {
-    { 0x8,  0xD },
-    { 0x8,  0xE },
-    { 0x8,  0xE },
-    { 0x8,  0xE },
-    { 0x8,  0xE },
-    { 0x8,  0xE },
-    { 0x8, 0x10 },
-    { 0x0,  0x0 }
+    { 8, 13 },
+    { 8, 14 },
+    { 8, 14 },
+    { 8, 14 },
+    { 8, 14 },
+    { 8, 14 },
+    { 8, 16 },
 };
 
 static u16 CopyDecompressedTileDataToVram(u8 bgId, const void *src, u16 size, u16 offset, u8 mode);
