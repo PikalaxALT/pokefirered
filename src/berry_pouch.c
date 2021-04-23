@@ -61,30 +61,6 @@ enum
     BP_ACTION_DUMMY
 };
 
-enum
-{
-    BP_WIN_STATIC_00 = 0,
-    BP_WIN_STATIC_01,
-    BP_WIN_STATIC_02,
-    BP_WIN_STATIC_CT,
-
-    BP_WIN_VAR_00    = 0,
-    BP_WIN_VAR_01,
-    BP_WIN_VAR_02,
-    BP_WIN_VAR_03,
-    BP_WIN_VAR_04,
-    BP_WIN_VAR_05,
-    BP_WIN_VAR_06,
-    BP_WIN_VAR_07,
-    BP_WIN_VAR_08,
-    BP_WIN_VAR_09,
-    BP_WIN_VAR_10,
-    BP_WIN_VAR_11,
-    BP_WIN_VAR_12,
-    BP_WIN_VAR_13,
-    BP_WIN_VAR_CT
-};
-
 // Task fields
 #define tListId             data[0]
 #define tPouchPosition      data[1]
@@ -244,7 +220,7 @@ static const u8 sOptions_UseToss_Exit[] = {
 static const u8 sText_Space[] = _(" ");
 
 static const struct WindowTemplate sWindowTemplates_Main[] = {
-    [BP_WIN_STATIC_00] = {
+    [BP_WIN_STATIC_LISTMENU] = {
         .bg = 0,
         .tilemapLeft = 11,
         .tilemapTop = 1,
@@ -253,7 +229,7 @@ static const struct WindowTemplate sWindowTemplates_Main[] = {
         .paletteNum = 15,
         .baseBlock = 0x027
     },
-    [BP_WIN_STATIC_01] = {
+    [BP_WIN_STATIC_ITEMDESC] = {
         .bg = 0,
         .tilemapLeft = 5,
         .tilemapTop = 16,
@@ -262,7 +238,7 @@ static const struct WindowTemplate sWindowTemplates_Main[] = {
         .paletteNum = 15,
         .baseBlock = 0x123
     },
-    [BP_WIN_STATIC_02] = {
+    [BP_WIN_STATIC_HEADER] = {
         .bg = 2,
         .tilemapLeft = 1,
         .tilemapTop = 1,
@@ -274,7 +250,7 @@ static const struct WindowTemplate sWindowTemplates_Main[] = {
 };
 
 static const struct WindowTemplate sWindowTemplates_Variable[] = {
-    [BP_WIN_VAR_00] = {
+    [BP_WIN_VAR_TOSSQUANTITYBOX] = {
         .bg = 2,
         .tilemapLeft = 24,
         .tilemapTop = 15,
@@ -283,7 +259,7 @@ static const struct WindowTemplate sWindowTemplates_Variable[] = {
         .paletteNum = 15,
         .baseBlock = 0x1d1
     }, 
-    [BP_WIN_VAR_01] = {
+    [BP_WIN_VAR_SELLQUANTITYBOX] = {
         .bg = 2,
         .tilemapLeft = 17,
         .tilemapTop = 9,
@@ -292,7 +268,7 @@ static const struct WindowTemplate sWindowTemplates_Variable[] = {
         .paletteNum = 15,
         .baseBlock = 0x1d1
     }, 
-    [BP_WIN_VAR_02] = {
+    [BP_WIN_VAR_SELLPRICEBOX] = {
         .bg = 2,
         .tilemapLeft = 1,
         .tilemapTop = 1,
@@ -301,7 +277,7 @@ static const struct WindowTemplate sWindowTemplates_Variable[] = {
         .paletteNum = 12,
         .baseBlock = 0x201
     }, 
-    [BP_WIN_VAR_03] = {
+    [BP_WIN_VAR_YESNOBOTTOM] = {
         .bg = 2,
         .tilemapLeft = 23,
         .tilemapTop = 15,
@@ -310,7 +286,7 @@ static const struct WindowTemplate sWindowTemplates_Variable[] = {
         .paletteNum = 15,
         .baseBlock = 0x219
     }, 
-    [BP_WIN_VAR_04] = {
+    [BP_WIN_VAR_YESNOTOP] = {
         .bg = 2,
         .tilemapLeft = 21,
         .tilemapTop = 9,
@@ -319,7 +295,7 @@ static const struct WindowTemplate sWindowTemplates_Variable[] = {
         .paletteNum = 15,
         .baseBlock = 0x219
     }, 
-    [BP_WIN_VAR_05] = {
+    [BP_WIN_VAR_MESSAGEBOX] = {
         .bg = 2,
         .tilemapLeft = 2,
         .tilemapTop = 15,
@@ -328,7 +304,7 @@ static const struct WindowTemplate sWindowTemplates_Variable[] = {
         .paletteNum = 15,
         .baseBlock = 0x231
     }, 
-    [BP_WIN_VAR_06] = {
+    [BP_WIN_VAR_BERRYISSELECTEDBOX] = {
         .bg = 2,
         .tilemapLeft = 6,
         .tilemapTop = 15,
@@ -337,7 +313,7 @@ static const struct WindowTemplate sWindowTemplates_Variable[] = {
         .paletteNum = 12,
         .baseBlock = 0x231
     }, 
-    [BP_WIN_VAR_07] = {
+    [BP_WIN_VAR_CONFIRMTOSSQUANTITY] = {
         .bg = 2,
         .tilemapLeft = 6,
         .tilemapTop = 15,
@@ -346,7 +322,7 @@ static const struct WindowTemplate sWindowTemplates_Variable[] = {
         .paletteNum = 12,
         .baseBlock = 0x269
     }, 
-    [BP_WIN_VAR_08] = {
+    [BP_WIN_VAR_ASKHOWMANYTOTOSS] = {
         .bg = 2,
         .tilemapLeft = 6,
         .tilemapTop = 15,
@@ -355,7 +331,7 @@ static const struct WindowTemplate sWindowTemplates_Variable[] = {
         .paletteNum = 12,
         .baseBlock = 0x2a5
     }, 
-    [BP_WIN_VAR_09] = {
+    [BP_WIN_VAR_FINALIZETOSS] = {
         .bg = 2,
         .tilemapLeft = 6,
         .tilemapTop = 15,
@@ -364,7 +340,7 @@ static const struct WindowTemplate sWindowTemplates_Variable[] = {
         .paletteNum = 12,
         .baseBlock = 0x2e5
     }, 
-    [BP_WIN_VAR_10] = {
+    [BP_WIN_VAR_CONTEXT_1ITEM] = {
         .bg = 2,
         .tilemapLeft = 22,
         .tilemapTop = 17,
@@ -373,7 +349,7 @@ static const struct WindowTemplate sWindowTemplates_Variable[] = {
         .paletteNum = 15,
         .baseBlock = 0x199
     }, 
-    [BP_WIN_VAR_11] = {
+    [BP_WIN_VAR_CONTEXT_2ITEM] = {
         .bg = 2,
         .tilemapLeft = 22,
         .tilemapTop = 15,
@@ -382,7 +358,7 @@ static const struct WindowTemplate sWindowTemplates_Variable[] = {
         .paletteNum = 15,
         .baseBlock = 0x199
     }, 
-    [BP_WIN_VAR_12] = {
+    [BP_WIN_VAR_CONTEXT_3ITEM] = {
         .bg = 2,
         .tilemapLeft = 22,
         .tilemapTop = 13,
@@ -391,7 +367,7 @@ static const struct WindowTemplate sWindowTemplates_Variable[] = {
         .paletteNum = 15,
         .baseBlock = 0x199
     }, 
-    [BP_WIN_VAR_13] = {
+    [BP_WIN_VAR_CONTEXT_4ITEM] = {
         .bg = 2,
         .tilemapLeft = 22,
         .tilemapTop = 11,
@@ -709,7 +685,7 @@ static void SetUpListMenuTemplate(void)
         gMultiuseListMenuTemplate.totalItems = sResources->listMenuNumItems + 1;
     else
         gMultiuseListMenuTemplate.totalItems = sResources->listMenuNumItems;
-    gMultiuseListMenuTemplate.windowId = BP_WIN_STATIC_00;
+    gMultiuseListMenuTemplate.windowId = BP_WIN_STATIC_LISTMENU;
     gMultiuseListMenuTemplate.header_X = 0;
     gMultiuseListMenuTemplate.item_X = 9;
     gMultiuseListMenuTemplate.cursor_X = 1;
@@ -789,12 +765,12 @@ static void BerryPouchSetArrowCursorAt(u8 y, u8 colorIdx)
     {
         width = GetMenuCursorDimensionByFont(2, 0);
         height = GetMenuCursorDimensionByFont(2, 1);
-        FillWindowPixelRect(BP_WIN_STATIC_00, PIXEL_FILL(0), 1, y, width, height);
-        CopyWindowToVram(BP_WIN_STATIC_00, COPYWIN_GFX);
+        FillWindowPixelRect(BP_WIN_STATIC_LISTMENU, PIXEL_FILL(0), 1, y, width, height);
+        CopyWindowToVram(BP_WIN_STATIC_LISTMENU, COPYWIN_GFX);
     }
     else
     {
-        BerryPouchPrint(BP_WIN_STATIC_00, 2, gText_SelectorArrow2, 1, y, 0, 0, 0, colorIdx);
+        BerryPouchPrint(BP_WIN_STATIC_LISTMENU, 2, gText_SelectorArrow2, 1, y, 0, 0, 0, colorIdx);
     }
 }
 
@@ -806,7 +782,7 @@ static void PrintSelectedBerryDescription(s32 itemIdx)
     else
         str = gText_TheBerryPouchWillBePutAway;
     FillWindowPixelBuffer(1, PIXEL_FILL(0));
-    BerryPouchPrint(BP_WIN_STATIC_01, 2, str, 0, 2, 2, 0, 0, 0);
+    BerryPouchPrint(BP_WIN_STATIC_ITEMDESC, 2, str, 0, 2, 2, 0, 0, 0);
 }
 
 static void SetDescriptionWindowBorderPalette(s32 pal)
@@ -847,7 +823,7 @@ static void DestroyScrollIndicatorArrows(void)
 static void PrintBerryPouchHeaderCentered(void)
 {
     u32 slack = 72 - GetStringWidth(1, gText_BerryPouch, 0);
-    BerryPouchPrint(BP_WIN_STATIC_02, 1, gText_BerryPouch, slack / 2, 1, 0, 0, 0, 0);
+    BerryPouchPrint(BP_WIN_STATIC_HEADER, 1, gText_BerryPouch, slack / 2, 1, 0, 0, 0, 0);
 }
 
 void BerryPouch_CursorResetToTop(void)
@@ -956,12 +932,12 @@ void BerryPouch_SetExitCallback(void (*callback)(void))
 void InitTossQuantitySelectUI(u8 taskId, const u8 * str)
 {
     s16 * data = gTasks[taskId].data;
-    u8 windowId = GetOrCreateVariableWindow(BP_WIN_VAR_08);
+    u8 windowId = GetOrCreateVariableWindow(BP_WIN_VAR_ASKHOWMANYTOTOSS);
     u8 windowId2;
     CopySelectedListMenuItemName(tPouchPosition, gStringVar1);
     StringExpandPlaceholders(gStringVar4, str);
     BerryPouchPrint(windowId, 2, gStringVar4, 0, 2, 1, 2, 0, 1);
-    windowId2 = GetOrCreateVariableWindow(BP_WIN_VAR_00);
+    windowId2 = GetOrCreateVariableWindow(BP_WIN_VAR_TOSSQUANTITYBOX);
     ConvertIntToDecimalStringN(gStringVar1, 1, STR_CONV_MODE_LEADING_ZEROS, 3);
     StringExpandPlaceholders(gStringVar4, gText_TimesStrVar1);
     BerryPouchPrint(windowId2, 0, gStringVar4, 4, 10, 1, 0, 0, 1);
@@ -1068,10 +1044,10 @@ static void CreateNormalContextMenu(u8 taskId)
         sContextMenuOptions = sOptions_UseGiveTossExit;
         sContextMenuNumOptions = 4;
     }
-    windowId = GetOrCreateVariableWindow(sContextMenuNumOptions + BP_WIN_VAR_09);
+    windowId = GetOrCreateVariableWindow(sContextMenuNumOptions + BP_WIN_VAR_CONTEXT_1ITEM - 1);
     AddItemMenuActionTextPrinters(windowId, 2, GetMenuCursorDimensionByFont(2, 0), 2, GetFontAttribute(2, FONTATTR_LETTER_SPACING), GetFontAttribute(2, FONTATTR_MAX_LETTER_HEIGHT) + 2, sContextMenuNumOptions, sContextMenuActions, sContextMenuOptions);
     Menu_InitCursor(windowId, 2, 0, 2, GetFontAttribute(2, FONTATTR_MAX_LETTER_HEIGHT) + 2, sContextMenuNumOptions, 0);
-    windowId2 = GetOrCreateVariableWindow(BP_WIN_VAR_06);
+    windowId2 = GetOrCreateVariableWindow(BP_WIN_VAR_BERRYISSELECTEDBOX);
     CopySelectedListMenuItemName(tPouchPosition, gStringVar1);
     StringExpandPlaceholders(gStringVar4, gText_Var1IsSelected);
     BerryPouchPrint(windowId2, 2, gStringVar4, 0, 2, 1, 2, 0, 1);
@@ -1107,10 +1083,10 @@ static void Task_NormalContextMenu_HandleInput(u8 taskId)
 
 static void Task_BerryPouch_Use(u8 taskId)
 {
-    DestroyVariableWindow(sContextMenuNumOptions + BP_WIN_VAR_09);
-    DestroyVariableWindow(BP_WIN_VAR_06);
-    PutWindowTilemap(BP_WIN_STATIC_00);
-    PutWindowTilemap(BP_WIN_STATIC_01);
+    DestroyVariableWindow(sContextMenuNumOptions + BP_WIN_VAR_CONTEXT_1ITEM - 1);
+    DestroyVariableWindow(BP_WIN_VAR_BERRYISSELECTEDBOX);
+    PutWindowTilemap(BP_WIN_STATIC_LISTMENU);
+    PutWindowTilemap(BP_WIN_STATIC_ITEMDESC);
     ScheduleBgCopyTilemapToVram(0);
     ScheduleBgCopyTilemapToVram(2);
     if (sStaticCnt.type == BERRYPOUCH_FROMBATTLE)
@@ -1129,11 +1105,11 @@ static void Task_BerryPouch_Use(u8 taskId)
 static void Task_BerryPouch_Toss(u8 taskId)
 {
     s16 * data = gTasks[taskId].data;
-    ClearWindowTilemap(GetVariableWindowId(sContextMenuNumOptions + BP_WIN_VAR_09));
-    ClearWindowTilemap(GetVariableWindowId(BP_WIN_VAR_06));
-    DestroyVariableWindow(sContextMenuNumOptions + BP_WIN_VAR_09);
-    DestroyVariableWindow(BP_WIN_VAR_06);
-    PutWindowTilemap(BP_WIN_STATIC_00);
+    ClearWindowTilemap(GetVariableWindowId(sContextMenuNumOptions + BP_WIN_VAR_CONTEXT_1ITEM - 1));
+    ClearWindowTilemap(GetVariableWindowId(BP_WIN_VAR_BERRYISSELECTEDBOX));
+    DestroyVariableWindow(sContextMenuNumOptions + BP_WIN_VAR_CONTEXT_1ITEM - 1);
+    DestroyVariableWindow(BP_WIN_VAR_BERRYISSELECTEDBOX);
+    PutWindowTilemap(BP_WIN_STATIC_LISTMENU);
     tTossQuantity = 1;
     if (tPouchQuantity == 1)
         Task_AskTossMultiple(taskId);
@@ -1150,16 +1126,16 @@ static void Task_AskTossMultiple(u8 taskId)
     s16 * data = gTasks[taskId].data;
     ConvertIntToDecimalStringN(gStringVar2, tTossQuantity, STR_CONV_MODE_LEFT_ALIGN, 3);
     StringExpandPlaceholders(gStringVar4, gText_ThrowAwayStrVar2OfThisItemQM);
-    BerryPouchPrint(GetOrCreateVariableWindow(BP_WIN_VAR_07), 2, gStringVar4, 0, 2, 1, 2, 0, 1);
+    BerryPouchPrint(GetOrCreateVariableWindow(BP_WIN_VAR_CONFIRMTOSSQUANTITY), 2, gStringVar4, 0, 2, 1, 2, 0, 1);
     CreateYesNoMenuWin3(taskId, &sYesNoFuncs_Toss);
 }
 
 static void Task_TossNo(u8 taskId)
 {
     s16 * data = gTasks[taskId].data;
-    DestroyVariableWindow(BP_WIN_VAR_07);
-    PutWindowTilemap(BP_WIN_STATIC_01);
-    PutWindowTilemap(BP_WIN_STATIC_00);
+    DestroyVariableWindow(BP_WIN_VAR_CONFIRMTOSSQUANTITY);
+    PutWindowTilemap(BP_WIN_STATIC_ITEMDESC);
+    PutWindowTilemap(BP_WIN_STATIC_LISTMENU);
     ScheduleBgCopyTilemapToVram(0);
     ScheduleBgCopyTilemapToVram(2);
     BerryPouchSetArrowCursorFromListMenu(tListId, 1);
@@ -1170,13 +1146,13 @@ static void Task_Toss_SelectMultiple(u8 taskId)
 {
     s16 * data = gTasks[taskId].data;
     if (AdjustQuantityAccordingToDPadInput(&tTossQuantity, tPouchQuantity) == TRUE)
-        PrintxQuantityOnWindow(BP_WIN_STATIC_00, tTossQuantity, 3);
+        PrintxQuantityOnWindow(BP_WIN_STATIC_LISTMENU, tTossQuantity, 3);
     else if (JOY_NEW(A_BUTTON))
     {
         PlaySE(SE_SELECT);
-        ClearWindowTilemap(GetVariableWindowId(BP_WIN_VAR_08));
-        DestroyVariableWindow(BP_WIN_VAR_08);
-        DestroyVariableWindow(BP_WIN_VAR_00);
+        ClearWindowTilemap(GetVariableWindowId(BP_WIN_VAR_ASKHOWMANYTOTOSS));
+        DestroyVariableWindow(BP_WIN_VAR_ASKHOWMANYTOTOSS);
+        DestroyVariableWindow(BP_WIN_VAR_TOSSQUANTITYBOX);
         ScheduleBgCopyTilemapToVram(0);
         ScheduleBgCopyTilemapToVram(2);
         DestroyScrollIndicatorArrows();
@@ -1185,10 +1161,10 @@ static void Task_Toss_SelectMultiple(u8 taskId)
     else if (JOY_NEW(B_BUTTON))
     {
         PlaySE(SE_SELECT);
-        DestroyVariableWindow(BP_WIN_VAR_08);
-        DestroyVariableWindow(BP_WIN_VAR_00);
-        PutWindowTilemap(BP_WIN_STATIC_00);
-        PutWindowTilemap(BP_WIN_STATIC_01);
+        DestroyVariableWindow(BP_WIN_VAR_ASKHOWMANYTOTOSS);
+        DestroyVariableWindow(BP_WIN_VAR_TOSSQUANTITYBOX);
+        PutWindowTilemap(BP_WIN_STATIC_LISTMENU);
+        PutWindowTilemap(BP_WIN_STATIC_ITEMDESC);
         ScheduleBgCopyTilemapToVram(0);
         ScheduleBgCopyTilemapToVram(2);
         BerryPouchSetArrowCursorFromListMenu(tListId, 1);
@@ -1200,11 +1176,11 @@ static void Task_Toss_SelectMultiple(u8 taskId)
 static void Task_TossYes(u8 taskId)
 {
     s16 * data = gTasks[taskId].data;
-    DestroyVariableWindow(BP_WIN_VAR_07);
+    DestroyVariableWindow(BP_WIN_VAR_CONFIRMTOSSQUANTITY);
     CopySelectedListMenuItemName(tPouchPosition, gStringVar1);
     ConvertIntToDecimalStringN(gStringVar2, tTossQuantity, STR_CONV_MODE_LEFT_ALIGN, 3);
     StringExpandPlaceholders(gStringVar4, gText_ThrewAwayStrVar2StrVar1s);
-    BerryPouchPrint(GetOrCreateVariableWindow(BP_WIN_VAR_09), 2, gStringVar4, 0, 2, 1, 2, 0, 1);
+    BerryPouchPrint(GetOrCreateVariableWindow(BP_WIN_VAR_FINALIZETOSS), 2, gStringVar4, 0, 2, 1, 2, 0, 1);
     gTasks[taskId].func = Task_WaitButtonThenTossBerries;
 }
 
@@ -1215,13 +1191,13 @@ static void Task_WaitButtonThenTossBerries(u8 taskId)
     {
         PlaySE(SE_SELECT);
         RemoveBagItem(gSpecialVar_ItemId, tTossQuantity);
-        DestroyVariableWindow(BP_WIN_VAR_09);
+        DestroyVariableWindow(BP_WIN_VAR_FINALIZETOSS);
         DestroyListMenuTask(tListId, &sStaticCnt.listMenuScrollOffset, &sStaticCnt.listMenuSelectedRow);
         SortAndCountBerries();
         SanitizeListMenuSelectionParams();
         SetUpListMenuTemplate();
         tListId = ListMenuInit(&gMultiuseListMenuTemplate, sStaticCnt.listMenuScrollOffset, sStaticCnt.listMenuSelectedRow);
-        PutWindowTilemap(BP_WIN_STATIC_01);
+        PutWindowTilemap(BP_WIN_STATIC_ITEMDESC);
         ScheduleBgCopyTilemapToVram(0);
         BerryPouchSetArrowCursorFromListMenu(tListId, 1);
         Task_CleanUpAndReturnToMain(taskId);
@@ -1230,10 +1206,10 @@ static void Task_WaitButtonThenTossBerries(u8 taskId)
 
 static void Task_BerryPouch_Give(u8 taskId)
 {
-    DestroyVariableWindow(sContextMenuNumOptions + BP_WIN_VAR_09);
-    DestroyVariableWindow(BP_WIN_VAR_06);
-    PutWindowTilemap(BP_WIN_STATIC_00);
-    PutWindowTilemap(BP_WIN_STATIC_01);
+    DestroyVariableWindow(sContextMenuNumOptions + BP_WIN_VAR_CONTEXT_1ITEM - 1);
+    DestroyVariableWindow(BP_WIN_VAR_BERRYISSELECTEDBOX);
+    PutWindowTilemap(BP_WIN_STATIC_LISTMENU);
+    PutWindowTilemap(BP_WIN_STATIC_ITEMDESC);
     ScheduleBgCopyTilemapToVram(0);
     ScheduleBgCopyTilemapToVram(2);
     if (CalculatePlayerPartyCount() == 0)
@@ -1262,7 +1238,7 @@ static void Task_WaitButtonBeforeDialogueWindowDestruction(u8 taskId)
 void Task_BerryPouch_DestroyDialogueWindowAndRefreshListMenu(u8 taskId)
 {
     s16 * data = gTasks[taskId].data;
-    TryDestroyVariableWindow(BP_WIN_VAR_05);
+    TryDestroyVariableWindow(BP_WIN_VAR_MESSAGEBOX);
     DestroyListMenuTask(tListId, &sStaticCnt.listMenuScrollOffset, &sStaticCnt.listMenuSelectedRow);
     SortAndCountBerries();
     SanitizeListMenuSelectionParams();
@@ -1275,10 +1251,10 @@ void Task_BerryPouch_DestroyDialogueWindowAndRefreshListMenu(u8 taskId)
 
 static void Task_BerryPouch_Exit(u8 taskId)
 {
-    DestroyVariableWindow(sContextMenuNumOptions + BP_WIN_VAR_09);
-    DestroyVariableWindow(BP_WIN_VAR_06);
-    PutWindowTilemap(BP_WIN_STATIC_00);
-    PutWindowTilemap(BP_WIN_STATIC_01);
+    DestroyVariableWindow(sContextMenuNumOptions + BP_WIN_VAR_CONTEXT_1ITEM - 1);
+    DestroyVariableWindow(BP_WIN_VAR_BERRYISSELECTEDBOX);
+    PutWindowTilemap(BP_WIN_STATIC_LISTMENU);
+    PutWindowTilemap(BP_WIN_STATIC_ITEMDESC);
     ScheduleBgCopyTilemapToVram(0);
     ScheduleBgCopyTilemapToVram(2);
     BerryPouchSetArrowCursorFromListMenu(gTasks[taskId].tListId, 1);
@@ -1352,11 +1328,11 @@ static void Task_SellMultiple_CreateYesNoMenu(u8 taskId)
 static void Task_SellNo(u8 taskId)
 {
     s16 * data = gTasks[taskId].data;
-    DestroyVariableWindow(BP_WIN_VAR_02);
-    TryDestroyVariableWindow(BP_WIN_VAR_05);
-    PutWindowTilemap(BP_WIN_STATIC_02);
-    PutWindowTilemap(BP_WIN_STATIC_00);
-    PutWindowTilemap(BP_WIN_STATIC_01);
+    DestroyVariableWindow(BP_WIN_VAR_SELLPRICEBOX);
+    TryDestroyVariableWindow(BP_WIN_VAR_MESSAGEBOX);
+    PutWindowTilemap(BP_WIN_STATIC_HEADER);
+    PutWindowTilemap(BP_WIN_STATIC_LISTMENU);
+    PutWindowTilemap(BP_WIN_STATIC_ITEMDESC);
     ScheduleBgCopyTilemapToVram(0);
     BerryPouchSetArrowCursorFromListMenu(tListId, 1);
     Task_CleanUpAndReturnToMain(taskId);
@@ -1365,7 +1341,7 @@ static void Task_SellNo(u8 taskId)
 static void Task_Sell_PrintSelectMultipleUI(u8 taskId)
 {
     s16 * data = gTasks[taskId].data;
-    u8 windowId = GetOrCreateVariableWindow(BP_WIN_VAR_01);
+    u8 windowId = GetOrCreateVariableWindow(BP_WIN_VAR_SELLQUANTITYBOX);
     ConvertIntToDecimalStringN(gStringVar1, 1, STR_CONV_MODE_LEADING_ZEROS, 2);
     StringExpandPlaceholders(gStringVar4, gText_TimesStrVar1);
     BerryPouchPrint(windowId, 0, gStringVar4, 4, 10, 1, 0, 0xFF, 1);
@@ -1377,7 +1353,7 @@ static void Task_Sell_PrintSelectMultipleUI(u8 taskId)
 
 static void SellMultiple_UpdateSellPriceDisplay(s32 price)
 {
-    PrintMoneyAmount(GetVariableWindowId(BP_WIN_VAR_01), 56, 10, price, 0);
+    PrintMoneyAmount(GetVariableWindowId(BP_WIN_VAR_SELLQUANTITYBOX), 56, 10, price, 0);
 }
 
 static void Task_Sell_SelectMultiple(u8 taskId)
@@ -1385,14 +1361,14 @@ static void Task_Sell_SelectMultiple(u8 taskId)
     s16 * data = gTasks[taskId].data;
     if (AdjustQuantityAccordingToDPadInput(&tTossQuantity, tPouchQuantity) == TRUE)
     {
-        PrintxQuantityOnWindow(BP_WIN_STATIC_01, tTossQuantity, 2);
+        PrintxQuantityOnWindow(BP_WIN_STATIC_ITEMDESC, tTossQuantity, 2);
         SellMultiple_UpdateSellPriceDisplay(itemid_get_market_price(BagGetItemIdByPocketPosition(POCKET_BERRY_POUCH, tPouchPosition)) / 2 * tTossQuantity);
     }
     else if (JOY_NEW(A_BUTTON))
     {
         PlaySE(SE_SELECT);
-        DestroyVariableWindow(BP_WIN_VAR_01);
-        PutWindowTilemap(BP_WIN_STATIC_00);
+        DestroyVariableWindow(BP_WIN_VAR_SELLQUANTITYBOX);
+        PutWindowTilemap(BP_WIN_STATIC_LISTMENU);
         ScheduleBgCopyTilemapToVram(0);
         DestroyScrollIndicatorArrows();
         Task_AskSellMultiple(taskId);
@@ -1400,12 +1376,12 @@ static void Task_Sell_SelectMultiple(u8 taskId)
     else if (JOY_NEW(B_BUTTON))
     {
         PlaySE(SE_SELECT);
-        DestroyVariableWindow(BP_WIN_VAR_01);
-        DestroyVariableWindow(BP_WIN_VAR_02);
-        TryDestroyVariableWindow(BP_WIN_VAR_05);
-        PutWindowTilemap(BP_WIN_STATIC_02);
-        PutWindowTilemap(BP_WIN_STATIC_00);
-        PutWindowTilemap(BP_WIN_STATIC_01);
+        DestroyVariableWindow(BP_WIN_VAR_SELLQUANTITYBOX);
+        DestroyVariableWindow(BP_WIN_VAR_SELLPRICEBOX);
+        TryDestroyVariableWindow(BP_WIN_VAR_MESSAGEBOX);
+        PutWindowTilemap(BP_WIN_STATIC_HEADER);
+        PutWindowTilemap(BP_WIN_STATIC_LISTMENU);
+        PutWindowTilemap(BP_WIN_STATIC_ITEMDESC);
         ScheduleBgCopyTilemapToVram(0);
         DestroyScrollIndicatorArrows();
         BerryPouchSetArrowCursorFromListMenu(tListId, 1);
@@ -1416,7 +1392,7 @@ static void Task_Sell_SelectMultiple(u8 taskId)
 static void Task_SellYes(u8 taskId)
 {
     s16 * data = gTasks[taskId].data;
-    PutWindowTilemap(BP_WIN_STATIC_00);
+    PutWindowTilemap(BP_WIN_STATIC_LISTMENU);
     ScheduleBgCopyTilemapToVram(0);
     CopyItemName(gSpecialVar_ItemId, gStringVar1);
     ConvertIntToDecimalStringN(gStringVar3, itemid_get_market_price(BagGetItemIdByPocketPosition(POCKET_BERRY_POUCH, tPouchPosition)) / 2 * tTossQuantity, STR_CONV_MODE_LEFT_ALIGN, 6);
@@ -1437,7 +1413,7 @@ static void Task_SellBerries_PlaySfxAndRemoveBerries(u8 taskId)
     SetUpListMenuTemplate();
     tListId = ListMenuInit(&gMultiuseListMenuTemplate, sStaticCnt.listMenuScrollOffset, sStaticCnt.listMenuSelectedRow);
     BerryPouchSetArrowCursorFromListMenu(tListId, 2);
-    PrintMoneyAmountInMoneyBox(GetVariableWindowId(BP_WIN_VAR_02), GetMoney(&gSaveBlock1Ptr->money), 0);
+    PrintMoneyAmountInMoneyBox(GetVariableWindowId(BP_WIN_VAR_SELLPRICEBOX), GetMoney(&gSaveBlock1Ptr->money), 0);
     gTasks[taskId].func = Task_SellBerries_WaitButton;
 }
 
@@ -1446,8 +1422,8 @@ static void Task_SellBerries_WaitButton(u8 taskId)
     if (JOY_NEW(A_BUTTON) || JOY_NEW(B_BUTTON))
     {
         PlaySE(SE_SELECT);
-        DestroyVariableWindow(BP_WIN_VAR_02);
-        PutWindowTilemap(BP_WIN_STATIC_02);
+        DestroyVariableWindow(BP_WIN_VAR_SELLPRICEBOX);
+        PutWindowTilemap(BP_WIN_STATIC_HEADER);
         Task_BerryPouch_DestroyDialogueWindowAndRefreshListMenu(taskId);
     }
 }
@@ -1457,15 +1433,15 @@ static void BerryPouchInitWindows(void)
     u8 i;
     InitWindows(sWindowTemplates_Main);
     DeactivateAllTextPrinters();
-    TextWindow_SetUserSelectedFrame(BP_WIN_STATIC_00, 0x001, 0xE0);
-    TextWindow_LoadResourcesStdFrame0(BP_WIN_STATIC_00, 0x013, 0xD0);
-    TextWindow_SetStdFrame0_WithPal(BP_WIN_STATIC_00, 0x00A, 0xC0);
+    TextWindow_SetUserSelectedFrame(BP_WIN_STATIC_LISTMENU, 0x001, 0xE0);
+    TextWindow_LoadResourcesStdFrame0(BP_WIN_STATIC_LISTMENU, 0x013, 0xD0);
+    TextWindow_SetStdFrame0_WithPal(BP_WIN_STATIC_LISTMENU, 0x00A, 0xC0);
     LoadPalette(gTMCaseMainWindowPalette, 0xF0, 0x20);
     for (i = 0; i < BP_WIN_STATIC_CT; i++)
         FillWindowPixelBuffer(i, PIXEL_FILL(0));
-    PutWindowTilemap(BP_WIN_STATIC_00);
-    PutWindowTilemap(BP_WIN_STATIC_01);
-    PutWindowTilemap(BP_WIN_STATIC_02);
+    PutWindowTilemap(BP_WIN_STATIC_LISTMENU);
+    PutWindowTilemap(BP_WIN_STATIC_ITEMDESC);
+    PutWindowTilemap(BP_WIN_STATIC_HEADER);
     ScheduleBgCopyTilemapToVram(0);
     ScheduleBgCopyTilemapToVram(2);
     for (i = 0; i < BP_WIN_VAR_CT; i++)
@@ -1483,11 +1459,11 @@ static u8 GetOrCreateVariableWindow(u8 winIdx)
     if (retval == 0xFF)
     {
         sVariableWindowIds[winIdx] = AddWindow(&sWindowTemplates_Variable[winIdx]);
-        if (winIdx == BP_WIN_VAR_02
-         || winIdx == BP_WIN_VAR_06
-         || winIdx == BP_WIN_VAR_07
-         || winIdx == BP_WIN_VAR_08
-         || winIdx == BP_WIN_VAR_09
+        if (winIdx == BP_WIN_VAR_SELLPRICEBOX
+         || winIdx == BP_WIN_VAR_BERRYISSELECTEDBOX
+         || winIdx == BP_WIN_VAR_CONFIRMTOSSQUANTITY
+         || winIdx == BP_WIN_VAR_ASKHOWMANYTOTOSS
+         || winIdx == BP_WIN_VAR_FINALIZETOSS
          )
             DrawStdFrameWithCustomTileAndPalette(sVariableWindowIds[winIdx], FALSE, 0x00A, 0xC);
         else
@@ -1519,7 +1495,7 @@ static void TryDestroyVariableWindow(u8 winIdx)
         ClearDialogWindowAndFrameToTransparent(sVariableWindowIds[winIdx], FALSE);
         ClearWindowTilemap(sVariableWindowIds[winIdx]);
         RemoveWindow(sVariableWindowIds[winIdx]);
-        PutWindowTilemap(BP_WIN_STATIC_01);
+        PutWindowTilemap(BP_WIN_STATIC_ITEMDESC);
         ScheduleBgCopyTilemapToVram(0);
         ScheduleBgCopyTilemapToVram(2);
         sVariableWindowIds[winIdx] = 0xFF;
@@ -1533,25 +1509,25 @@ static u8 GetVariableWindowId(u8 winIdx)
 
 void DisplayItemMessageInBerryPouch(u8 taskId, u8 fontId, const u8 * str, TaskFunc followUpFunc)
 {
-    if (sVariableWindowIds[BP_WIN_VAR_05] == 0xFF)
-        sVariableWindowIds[BP_WIN_VAR_05] = AddWindow(&sWindowTemplates_Variable[BP_WIN_VAR_05]);
-    DisplayMessageAndContinueTask(taskId, sVariableWindowIds[BP_WIN_VAR_05], 0x013, 0xD, fontId, GetTextSpeedSetting(), str, followUpFunc);
+    if (sVariableWindowIds[BP_WIN_VAR_MESSAGEBOX] == 0xFF)
+        sVariableWindowIds[BP_WIN_VAR_MESSAGEBOX] = AddWindow(&sWindowTemplates_Variable[BP_WIN_VAR_MESSAGEBOX]);
+    DisplayMessageAndContinueTask(taskId, sVariableWindowIds[BP_WIN_VAR_MESSAGEBOX], 0x013, 0xD, fontId, GetTextSpeedSetting(), str, followUpFunc);
     ScheduleBgCopyTilemapToVram(2);
 }
 
 static void CreateYesNoMenuWin3(u8 taskId, const struct YesNoFuncTable *ptrs)
 {
-    CreateYesNoMenuWithCallbacks(taskId, &sWindowTemplates_Variable[BP_WIN_VAR_03], 2, 0, 2, 0x001, 0xE, ptrs);
+    CreateYesNoMenuWithCallbacks(taskId, &sWindowTemplates_Variable[BP_WIN_VAR_YESNOBOTTOM], 2, 0, 2, 0x001, 0xE, ptrs);
 }
 
 static void CreateYesNoMenuWin4(u8 taskId, const struct YesNoFuncTable *ptrs)
 {
-    CreateYesNoMenuWithCallbacks(taskId, &sWindowTemplates_Variable[BP_WIN_VAR_04], 2, 0, 2, 0x001, 0xE, ptrs);
+    CreateYesNoMenuWithCallbacks(taskId, &sWindowTemplates_Variable[BP_WIN_VAR_YESNOTOP], 2, 0, 2, 0x001, 0xE, ptrs);
 }
 
 static void PrintMoneyInWin2(void)
 {
-    PrintMoneyAmountInMoneyBoxWithBorder(GetOrCreateVariableWindow(BP_WIN_VAR_02), 0x00A, 0xC, GetMoney(&gSaveBlock1Ptr->money));
+    PrintMoneyAmountInMoneyBoxWithBorder(GetOrCreateVariableWindow(BP_WIN_VAR_SELLPRICEBOX), 0x00A, 0xC, GetMoney(&gSaveBlock1Ptr->money));
 }
 
 static void CreateBerryPouchSprite(void)
