@@ -9,16 +9,19 @@
 #include "event_data.h"
 #include "constants/moves.h"
 
-static void sub_80BF97C(u8 taskId);
+static void Task_WaitFadeAndEnterScriptPartyMenu(u8 taskId);
+
+#define gSpecialVar_PartyIdx     gSpecialVar_0x8004
+#define gSpecialVar_MoveIdx      gSpecialVar_0x8005
 
 void ChoosePartyMon(void)
 {
     u8 taskId;
 
     ScriptContext2_Enable();
-    taskId = CreateTask(sub_80BF97C, 10);
+    taskId = CreateTask(Task_WaitFadeAndEnterScriptPartyMenu, 10);
     gTasks[taskId].data[0] = PARTY_MENU_TYPE_CHOOSE_MON;
-    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 0x10, RGB_BLACK);
+    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB_BLACK);
 }
 
 void SelectMoveTutorMon(void)
@@ -26,12 +29,12 @@ void SelectMoveTutorMon(void)
     u8 taskId;
 
     ScriptContext2_Enable();
-    taskId = CreateTask(sub_80BF97C, 10);
+    taskId = CreateTask(Task_WaitFadeAndEnterScriptPartyMenu, 10);
     gTasks[taskId].data[0] = PARTY_MENU_TYPE_MOVE_RELEARNER;
-    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 0x10, RGB_BLACK);
+    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB_BLACK);
 }
 
-static void sub_80BF97C(u8 taskId)
+static void Task_WaitFadeAndEnterScriptPartyMenu(u8 taskId)
 {
     if (!gPaletteFade.active)
     {
@@ -43,7 +46,7 @@ static void sub_80BF97C(u8 taskId)
 
 void SelectMoveDeleterMove(void)
 {
-    ShowSelectMovePokemonSummaryScreen(gPlayerParty, gSpecialVar_0x8004, gPlayerPartyCount - 1, CB2_ReturnToField, 0);
+    ShowSelectMovePokemonSummaryScreen(gPlayerParty, gSpecialVar_PartyIdx, gPlayerPartyCount - 1, CB2_ReturnToField, 0);
     SetPokemonSummaryScreenMode(PSS_MODE_FORGET_MOVE);
     gFieldCallback = FieldCB_ContinueScriptHandleMusic;
 }
@@ -54,20 +57,20 @@ void GetNumMovesSelectedMonHas(void)
 
     gSpecialVar_Result = 0;
     for (i = 0; i < MAX_MON_MOVES; ++i)
-        if (GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_MOVE1 + i) != MOVE_NONE)
+        if (GetMonData(&gPlayerParty[gSpecialVar_PartyIdx], MON_DATA_MOVE1 + i) != MOVE_NONE)
             ++gSpecialVar_Result;
 }
 
 void BufferMoveDeleterNicknameAndMove(void)
 {
-    struct Pokemon *mon = &gPlayerParty[gSpecialVar_0x8004];
-    u16 move = GetMonData(mon, MON_DATA_MOVE1 + gSpecialVar_0x8005);
+    struct Pokemon *mon = &gPlayerParty[gSpecialVar_PartyIdx];
+    u16 move = GetMonData(mon, MON_DATA_MOVE1 + gSpecialVar_MoveIdx);
 
     GetMonNickname(mon, gStringVar1);
     StringCopy(gStringVar2, gMoveNames[move]);
 }
 
-static void ShiftMoveSlot(struct Pokemon *mon, u8 slotTo, u8 slotFrom)
+static void SwapMoveSlots(struct Pokemon *mon, u8 slotTo, u8 slotFrom)
 {
     u16 move1 = GetMonData(mon, MON_DATA_MOVE1 + slotTo);
     u16 move0 = GetMonData(mon, MON_DATA_MOVE1 + slotFrom);
@@ -93,15 +96,15 @@ void MoveDeleterForgetMove(void)
 {
     u16 i;
 
-    SetMonMoveSlot(&gPlayerParty[gSpecialVar_0x8004], MOVE_NONE, gSpecialVar_0x8005);
-    RemoveMonPPBonus(&gPlayerParty[gSpecialVar_0x8004], gSpecialVar_0x8005);
-    for (i = gSpecialVar_0x8005; i < MAX_MON_MOVES - 1; ++i)
-        ShiftMoveSlot(&gPlayerParty[gSpecialVar_0x8004], i, i + 1);
+    SetMonMoveSlot(&gPlayerParty[gSpecialVar_PartyIdx], MOVE_NONE, gSpecialVar_MoveIdx);
+    RemoveMonPPBonus(&gPlayerParty[gSpecialVar_PartyIdx], gSpecialVar_MoveIdx);
+    for (i = gSpecialVar_MoveIdx; i < MAX_MON_MOVES - 1; ++i)
+        SwapMoveSlots(&gPlayerParty[gSpecialVar_PartyIdx], i, i + 1);
 }
 
 void IsSelectedMonEgg(void)
 {
-    if (GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_IS_EGG))
+    if (GetMonData(&gPlayerParty[gSpecialVar_PartyIdx], MON_DATA_IS_EGG))
         gSpecialVar_Result = TRUE;
     else
         gSpecialVar_Result = FALSE;

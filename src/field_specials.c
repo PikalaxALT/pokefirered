@@ -2237,21 +2237,21 @@ bool8 CapeBrinkGetMoveToTeachLeadPokemon(void)
     if (tutorMonId == 0)
     {
         StringCopy(gStringVar2, gMoveNames[MOVE_FRENZY_PLANT]);
-        gSpecialVar_0x8005 = MOVETUTOR_FRENZY_PLANT;
+        gSpecialVar_0x8005 = TUTOR_MOVE_FRENZY_PLANT;
         if (FlagGet(FLAG_TUTOR_FRENZY_PLANT) == TRUE)
             return FALSE;
     }
     else if (tutorMonId == 1)
     {
         StringCopy(gStringVar2, gMoveNames[MOVE_BLAST_BURN]);
-        gSpecialVar_0x8005 = MOVETUTOR_BLAST_BURN;
+        gSpecialVar_0x8005 = TUTOR_MOVE_BLAST_BURN;
         if (FlagGet(FLAG_TUTOR_BLAST_BURN) == TRUE)
             return FALSE;
     }
     else
     {
         StringCopy(gStringVar2, gMoveNames[MOVE_HYDRO_CANNON]);
-        gSpecialVar_0x8005 = MOVETUTOR_HYDRO_CANNON;
+        gSpecialVar_0x8005 = TUTOR_MOVE_HYDRO_CANNON;
         if (FlagGet(FLAG_TUTOR_HYDRO_CANNON) == TRUE)
             return FALSE;
     }
@@ -2267,23 +2267,23 @@ bool8 CapeBrinkGetMoveToTeachLeadPokemon(void)
     return TRUE;
 }
 
-bool8 HasLearnedAllMovesFromCapeBrinkTutor(void)
+bool8 SetSpecialTutorMoveFlagAndCheckAllMovesTaught(void)
 {
     // 8005 is set by CapeBrinkGetMoveToTeachLeadPokemon
-    u8 r4 = 0;
-    if (gSpecialVar_0x8005 == MOVETUTOR_FRENZY_PLANT)
+    u8 count = 0;
+    if (gSpecialVar_0x8005 == TUTOR_MOVE_FRENZY_PLANT)
         FlagSet(FLAG_TUTOR_FRENZY_PLANT);
-    else if (gSpecialVar_0x8005 == MOVETUTOR_BLAST_BURN)
+    else if (gSpecialVar_0x8005 == TUTOR_MOVE_BLAST_BURN)
         FlagSet(FLAG_TUTOR_BLAST_BURN);
     else
         FlagSet(FLAG_TUTOR_HYDRO_CANNON);
     if (FlagGet(FLAG_TUTOR_FRENZY_PLANT) == TRUE)
-        r4++;
+        count++;
     if (FlagGet(FLAG_TUTOR_BLAST_BURN) == TRUE)
-        r4++;
+        count++;
     if (FlagGet(FLAG_TUTOR_HYDRO_CANNON) == TRUE)
-        r4++;
-    if (r4 == 3)
+        count++;
+    if (count == 3)
         return TRUE;
     else
         return FALSE;

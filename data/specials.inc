@@ -428,7 +428,7 @@ gSpecials:: @ 815FD60
 	def_special DoPokemonLeagueLightingEffect
 	def_special ShowBerryCrushRankings
 	def_special CapeBrinkGetMoveToTeachLeadPokemon
-	def_special HasLearnedAllMovesFromCapeBrinkTutor
+	def_special SetSpecialTutorMoveFlagAndCheckAllMovesTaught
 	def_special DoCredits
 	def_special ShowDodrioBerryPickingRecords
 	def_special DrawSeagallopDestinationMenu
