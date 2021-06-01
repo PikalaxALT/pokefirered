@@ -2143,7 +2143,7 @@ static void mli4_mapscripts_and_other(void)
 
 static void ReloadObjectsAndRunReturnToFieldMapScript(void)
 {
-    ReloadMapObjectsWithOffset(0, 0);
+    SpawnObjectEventsOnReturnToField(0, 0);
     RunOnReturnToFieldMapScript();
 }
 

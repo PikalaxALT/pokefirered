@@ -69,9 +69,9 @@ static void GetObjectEventMovingCameraOffset(s16 *, s16 *);
 static struct ObjectEventTemplate *GetObjectEventTemplateByLocalIdAndMap(u8, u8, u8);
 static void LoadObjectEventPalette(u16);
 static void RemoveObjectEventIfOutsideView(struct ObjectEvent *);
-static void ReloadMapObjectWithOffset(u8 objectEventId, s16 x, s16 y);
+static void SpawnObjectEventOnReturnToField(u8 objectEventId, s16 x, s16 y);
 static void SetPlayerAvatarObjectEventIdAndObjectId(u8, u8);
-static void sub_805EFF4(struct ObjectEvent *);
+static void ResetObjectEventFldEffData(struct ObjectEvent *objectEvent);
 static u8 TryLoadObjectPalette(const struct SpritePalette *spritePalette);
 static u8 FindObjectEventPaletteIndexByTag(u16);
 static bool8 ObjectEventDoesZCoordMatch(struct ObjectEvent *, u8);
@@ -1617,7 +1617,8 @@ static u8 TrySetupObjectEventSprite(struct ObjectEventTemplate *objectEventTempl
     }
 
     sprite = &gSprites[spriteId];
-    sub_8063AD4(objectEvent->currentCoords.x + cameraX, objectEvent->currentCoords.y + cameraY, &sprite->pos1.x, &sprite->pos1.y);
+    GetMapCoordsFromSpritePos(objectEvent->currentCoords.x + cameraX, objectEvent->currentCoords.y + cameraY,
+                              &sprite->pos1.x, &sprite->pos1.y);
     sprite->centerToCornerVecX = -(graphicsInfo->width >> 1);
     sprite->centerToCornerVecY = -(graphicsInfo->height >> 1);
     sprite->pos1.x += 8;
@@ -1894,7 +1895,7 @@ static void RemoveObjectEventIfOutsideView(struct ObjectEvent *objectEvent)
     RemoveObjectEvent(objectEvent);
 }
 
-void ReloadMapObjectsWithOffset(s16 x, s16 y)
+void SpawnObjectEventsOnReturnToField(s16 x, s16 y)
 {
     u8 i;
 
@@ -1903,23 +1904,22 @@ void ReloadMapObjectsWithOffset(s16 x, s16 y)
     {
         if (gObjectEvents[i].active)
         {
-            ReloadMapObjectWithOffset(i, x, y);
+            SpawnObjectEventOnReturnToField(i, x, y);
         }
     }
     CreateReflectionEffectSprites();
 }
 
-static void ReloadMapObjectWithOffset(u8 objectEventId, s16 x, s16 y)
+static void SpawnObjectEventOnReturnToField(u8 objectEventId, s16 x, s16 y)
 {
-    u8 spriteId;
-    struct Sprite *sprite;
-    struct ObjectEvent *objectEvent;
+    u8 i;
     struct SpriteTemplate spriteTemplate;
-    struct SpriteFrameImage spriteFrameImage;
     const struct SubspriteTable *subspriteTables;
     const struct ObjectEventGraphicsInfo *graphicsInfo;
+    struct Sprite *sprite;
+    struct ObjectEvent *objectEvent;
+    struct SpriteFrameImage spriteFrameImage[1];
 
-#define i spriteId
     for (i = 0; i < NELEMS(gLinkPlayerObjectEvents); i++)
     {
         if (gLinkPlayerObjectEvents[i].active && objectEventId == gLinkPlayerObjectEvents[i].objEventId)
@@ -1927,58 +1927,61 @@ static void ReloadMapObjectWithOffset(u8 objectEventId, s16 x, s16 y)
             return;
         }
     }
-#undef i
 
     objectEvent = &gObjectEvents[objectEventId];
-    objectEvent++;objectEvent--; // fakematch
+    /* ===========================================================
+     * FIXME: FAKEMATCH
+     * Whether it's the struct definition or file boundaries,
+     * this routine currently does not fully match. This inc/dec
+     * resolves an r5/r6 swap.
+     * =========================================================== */
+    objectEvent++;objectEvent--;
     subspriteTables = NULL;
     graphicsInfo = GetObjectEventGraphicsInfo(objectEvent->graphicsId);
-    spriteFrameImage.size = graphicsInfo->size;
+    spriteFrameImage[0].size = graphicsInfo->size;
     MakeObjectTemplateFromObjectEventGraphicsInfoWithCallbackIndex(objectEvent->graphicsId, objectEvent->movementType, &spriteTemplate, &subspriteTables);
-    spriteTemplate.images = &spriteFrameImage;
+    spriteTemplate.images = spriteFrameImage;
     *(u16 *)&spriteTemplate.paletteTag = SPRITE_INVALID_TAG;
+
     if (graphicsInfo->paletteSlot == 0)
     {
         LoadPlayerObjectReflectionPalette(graphicsInfo->paletteTag, graphicsInfo->paletteSlot);
     }
-    if (graphicsInfo->paletteSlot > 9)
+    if (graphicsInfo->paletteSlot >= 10)
     {
         LoadSpecialObjectReflectionPalette(graphicsInfo->paletteTag, graphicsInfo->paletteSlot);
     }
     *(u16 *)&spriteTemplate.paletteTag = SPRITE_INVALID_TAG;
-    spriteId = CreateSprite(&spriteTemplate, 0, 0, 0);
-    if (spriteId != MAX_SPRITES)
+
+    i = CreateSprite(&spriteTemplate, 0, 0, 0);
+    if (i == MAX_SPRITES)
+        return;
+
+    sprite = &gSprites[i];
+    GetMapCoordsFromSpritePos(objectEvent->currentCoords.x + x, objectEvent->currentCoords.y + y, &sprite->pos1.x, &sprite->pos1.y);
+    sprite->centerToCornerVecX = -(graphicsInfo->width >> 1);
+    sprite->centerToCornerVecY = -(graphicsInfo->height >> 1);
+    sprite->pos1.x += 8;
+    sprite->pos1.y += 16 + sprite->centerToCornerVecY;
+    sprite->images = graphicsInfo->images;
+    if (objectEvent->movementType == MOVEMENT_TYPE_PLAYER)
     {
-        sprite = &gSprites[spriteId];
-        sub_8063AD4(x + objectEvent->currentCoords.x, y + objectEvent->currentCoords.y, &sprite->pos1.x, &sprite->pos1.y);
-        sprite->centerToCornerVecX = -(graphicsInfo->width >> 1);
-        sprite->centerToCornerVecY = -(graphicsInfo->height >> 1);
-        sprite->pos1.x += 8;
-        sprite->pos1.y += 16 + sprite->centerToCornerVecY;
-        sprite->images = graphicsInfo->images;
-        if (objectEvent->movementType == MOVEMENT_TYPE_PLAYER)
-        {
-            SetPlayerAvatarObjectEventIdAndObjectId(objectEventId, spriteId);
-            objectEvent->warpArrowSpriteId = CreateWarpArrowSprite();
-        }
-        if (subspriteTables != NULL)
-        {
-            SetSubspriteTables(sprite, subspriteTables);
-        }
-        sprite->oam.paletteNum = graphicsInfo->paletteSlot;
-        sprite->coordOffsetEnabled = TRUE;
-        sprite->data[0] = objectEventId;
-        objectEvent->spriteId = spriteId;
-        if (!objectEvent->inanimate && objectEvent->movementType != MOVEMENT_TYPE_PLAYER)
-        {
-            StartSpriteAnim(sprite, GetFaceDirectionAnimNum(objectEvent->facingDirection));
-        }
-        sub_805EFF4(objectEvent);
-        SetObjectSubpriorityByZCoord(objectEvent->previousElevation, sprite, 1);
+        SetPlayerAvatarObjectEventIdAndObjectId(objectEventId, i);
+        objectEvent->warpArrowSpriteId = CreateWarpArrowSprite();
     }
+    if (subspriteTables != NULL)
+        SetSubspriteTables(sprite, subspriteTables);
+    sprite->oam.paletteNum = graphicsInfo->paletteSlot;
+    sprite->coordOffsetEnabled = TRUE;
+    sprite->data[0] = objectEventId;
+    objectEvent->spriteId = i;
+    if (!objectEvent->inanimate && objectEvent->movementType != MOVEMENT_TYPE_PLAYER)
+        StartSpriteAnim(sprite, GetFaceDirectionAnimNum(objectEvent->facingDirection));
+    ResetObjectEventFldEffData(objectEvent);
+    SetObjectSubpriorityByZCoord(objectEvent->previousElevation, sprite, 1);
 }
 
-static void sub_805EFF4(struct ObjectEvent *objectEvent)
+static void ResetObjectEventFldEffData(struct ObjectEvent *objectEvent)
 {
     objectEvent->singleMovementActive = FALSE;
     objectEvent->triggerGroundEffectsOnMove = TRUE;
@@ -2322,7 +2325,7 @@ void MoveObjectEventToMapCoords(struct ObjectEvent *objectEvent, s16 x, s16 y)
     sprite->centerToCornerVecY = -(graphicsInfo->height >> 1);
     sprite->pos1.x += 8;
     sprite->pos1.y += 16 + sprite->centerToCornerVecY;
-    sub_805EFF4(objectEvent);
+    ResetObjectEventFldEffData(objectEvent);
     if (objectEvent->trackedByCamera)
         CameraObjectReset1();
 }
@@ -5013,7 +5016,7 @@ static void MoveCoordsInDirection(u32 dir, s16 *x, s16 *y, s16 deltaX, s16 delta
         *y -= dy2;
 }
 
-void sub_8063AD4(s16 x, s16 y, s16 *destX, s16 *destY)
+void GetMapCoordsFromSpritePos(s16 x, s16 y, s16 *destX, s16 *destY)
 {
     *destX = (x - gSaveBlock1Ptr->pos.x) << 4;
     *destY = (y - gSaveBlock1Ptr->pos.y) << 4;
