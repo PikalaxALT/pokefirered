@@ -1,25 +1,26 @@
 gNumMusicPlayers = 4;
 gMaxLines = 0;
 
-SECTIONS {
-    . = 0x2000000;
+MEMORY {
+	ewram  (AW) : ORIGIN = 0x02000000, LENGTH = 0x40000
+	iwram  (AW) : ORIGIN = 0x03000000, LENGTH = 0x8000
+	rom   (RWX) : ORIGIN = 0x08000000, LENGTH = 0x1000000
+}
 
+SECTIONS {
     ewram (NOLOAD) :
     ALIGN(4)
     {
         gHeap = .;
 
-        . = 0x1C000;
+        . += 0x1C000;
 
 <EWRAM>
 
         *libc.a:impure.o(.data);
         *libc.a:locale.o(.data);
         *libc.a:mallocr.o(.data);
-        . = 0x40000;
-    }
-
-    . = 0x3000000;
+    } >ewram
 
     iwram (NOLOAD) :
     ALIGN(4)
@@ -35,11 +36,7 @@ SECTIONS {
 
         *libc.a:sbrkr.o(COMMON);
         end = .;
-
-        . = 0x8000;
-    }
-
-    . = 0x8000000;
+    } >iwram
 
     .text :
     ALIGN(4)
@@ -310,7 +307,7 @@ SECTIONS {
         src/berry_powder.o(.text);
         src/minigame_countdown.o(.text);
         src/berry_fix_program.o(.text);
-    } =0
+    } >rom =0
 
     script_data :
     ALIGN(4)
@@ -322,7 +319,7 @@ SECTIONS {
         data/battle_scripts_2.o(script_data);
         data/battle_ai_scripts.o(script_data);
         data/mystery_event_script_cmd_table.o(script_data);
-    } =0
+    } >rom =0
 
     lib_text :
     ALIGN(4)
@@ -391,7 +388,7 @@ SECTIONS {
         *libc.a:libcfunc.o(.text);
         *libc.a:lseekr.o(.text);
         *libc.a:readr.o(.text);
-    } =0
+    } >rom =0
 
     .rodata :
     SUBALIGN(4)
@@ -617,7 +614,7 @@ SECTIONS {
         data/mystery_event_msg.o(.rodata);
         src/m4a_tables.o(.rodata);
         data/sound_data.o(.rodata);
-    } =0
+    } >rom =0
 
     song_data :
     ALIGN(4)
@@ -969,7 +966,7 @@ SECTIONS {
         sound/songs/midi/mus_trainer_tower.o(.rodata);
         sound/songs/midi/mus_slow_pallet.o(.rodata);
         sound/songs/midi/mus_teachy_tv_menu.o(.rodata);
-    }
+    } >rom
 
     lib_rodata :
     SUBALIGN(4)
@@ -1022,7 +1019,7 @@ SECTIONS {
         *libc.a:readr.o(.rodata);
 
         . = ALIGN(4);
-    } =0
+    } >rom =0
 
     other_data :
     ALIGN(4)
@@ -1030,14 +1027,16 @@ SECTIONS {
         data/unknown_serial_data.o(.rodata);
         data/multiboot_berry_glitch_fix.o(.rodata);
         data/multiboot_pokemon_colosseum.o(.rodata);
-    } =0
+    } >rom =0
 
-    . = 0x08D00000;
-    gfx_data :
+/*__gfx_load_address = LOADADDR (other_data) + SIZEOF (other_data);*/
+__gfx_load_address = 0x08D00000;
+
+    gfx_data __gfx_load_address :
     ALIGN(4)
     {
         src/graphics.o(.rodata);
-    } =0
+    } >rom =0
 
     /* DWARF 2 sections */
     .debug_aranges  0 : { *(.debug_aranges) }

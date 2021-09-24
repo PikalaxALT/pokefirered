@@ -1,22 +1,24 @@
 gNumMusicPlayers = 4;
 gMaxLines = 0;
 
-SECTIONS {
-    . = 0x2000000;
+MEMORY {
+	ewram  (AW) : ORIGIN = 0x02000000, LENGTH = 0x40000
+	iwram  (AW) : ORIGIN = 0x03000000, LENGTH = 0x8000
+	rom   (RWX) : ORIGIN = 0x08000000, LENGTH = 0x1000000
+}
 
+STARTUP (src/crt0.o)
+
+SECTIONS {
     ewram (NOLOAD) :
     ALIGN(4)
     {
         gHeap = .;
 
-        . = 0x1C000;
+        . += 0x1C000;
 
         *(ewram_data);
-
-        . = 0x40000;
-}
-
-    . = 0x3000000;
+	} >ewram
 
     iwram (NOLOAD) :
     ALIGN(4)
@@ -30,42 +32,37 @@ SECTIONS {
         *(COMMON);
         end = .;
         __end__ = .;
-        . = 0x8000;
-    }
-
-    . = 0x8000000;
+    } >iwram
 
     .text :
     ALIGN(4)
     {
-        src/crt0.o(.text);
         *(.text*);
-    } =0
+    } >rom =0
 
     .text.unlikely :
     ALIGN(4)
     {
-        src/crt0.o(.text.unlikely);
         *(.text.unlikely*);
-    } =0
+    } >rom =0
 
     script_data :
     ALIGN(4)
     {
     	*(script_data);
-    } =0
+    } >rom =0
 
     .data :
     ALIGN(4)
     {
     	*(.data*);
-    } =0
+    } >rom =0
 
     .rodata :
     ALIGN(4)
     {
     	*(.rodata*);
-    } =0
+    } >rom =0
 
     /* DWARF 2 sections */
     .debug_aranges  0 : { *(.debug_aranges) }

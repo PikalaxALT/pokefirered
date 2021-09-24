@@ -820,7 +820,7 @@ static void sub_80559A8(void)
     ChooseAmbientCrySpecies();
     SetDefaultFlashLevel();
     sub_8110920();
-    sub_8111708();
+    RestoreMapLayoutFromVar();
     LoadSaveblockMapHeader();
     InitMap();
 }

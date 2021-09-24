@@ -635,7 +635,7 @@ void sub_8113BD8(void)
 
 u16 *TryRecordEvent39_NoParams(u16 *a0)
 {
-    if (!WillCommandOfSizeFitInSav1Record(a0, sQuestLogEventCmdSizes[QL_EVENT_39]))
+    if (!QuestLogSavWriteBoundsCheck(a0, sQuestLogEventCmdSizes[QL_EVENT_39]))
         return NULL;
     a0[0] = QL_EVENT_39;
     return a0 + 1;
@@ -643,7 +643,7 @@ u16 *TryRecordEvent39_NoParams(u16 *a0)
 
 u16 *sub_8113C20(u16 *a0, struct QuestLogEntry * a1)
 {
-    if (!WillCommandOfSizeFitInSav1Record(a0, sQuestLogEventCmdSizes[QL_EVENT_39]))
+    if (!QuestLogSavWriteBoundsCheck(a0, sQuestLogEventCmdSizes[QL_EVENT_39]))
         return NULL;
     a1->command = 0xFF;
     a1->duration = 0;
@@ -656,7 +656,7 @@ u16 *sub_8113C20(u16 *a0, struct QuestLogEntry * a1)
 
 static u16 *TryRecordEvent41(u16 *a0, u16 a1)
 {
-    if (!WillCommandOfSizeFitInSav1Record(a0, sQuestLogEventCmdSizes[QL_EVENT_41]))
+    if (!QuestLogSavWriteBoundsCheck(a0, sQuestLogEventCmdSizes[QL_EVENT_41]))
         return NULL;
     a0[0] = QL_EVENT_41;
     a0[1] = a1;
@@ -665,7 +665,7 @@ static u16 *TryRecordEvent41(u16 *a0, u16 a1)
 
 u16 *sub_8113C8C(u16 *a0, struct QuestLogEntry * a1)
 {
-    if (!WillCommandOfSizeFitInSav1Record(a0, sQuestLogEventCmdSizes[QL_EVENT_41]))
+    if (!QuestLogSavWriteBoundsCheck(a0, sQuestLogEventCmdSizes[QL_EVENT_41]))
         return NULL;
     a1->command = 0xFE;
     a1->duration = a0[1];
@@ -680,7 +680,7 @@ u16 *sub_8113CC8(u16 *a0, struct QuestLogEntry * a1)
 {
     u8 *r6 = (u8 *)a0 + 4;
 
-    if (!WillCommandOfSizeFitInSav1Record(a0, sQuestLogEventCmdSizes[QL_EVENT_0]))
+    if (!QuestLogSavWriteBoundsCheck(a0, sQuestLogEventCmdSizes[QL_EVENT_0]))
         return NULL;
     a0[0] = 0;
     a0[1] = a1->duration;
@@ -695,7 +695,7 @@ u16 *sub_8113D08(u16 *a0, struct QuestLogEntry * a1)
 {
     u8 *r6 = (u8 *)a0 + 4;
 
-    if (!WillCommandOfSizeFitInSav1Record(a0, sQuestLogEventCmdSizes[QL_EVENT_0]))
+    if (!QuestLogSavWriteBoundsCheck(a0, sQuestLogEventCmdSizes[QL_EVENT_0]))
         return NULL;
     a1->command = 2;
     a1->duration = a0[1];
@@ -711,7 +711,7 @@ u16 *sub_8113D48(u16 *a0, struct QuestLogEntry * a1)
     u16 *r4 = a0;
     u8 *r6 = (u8 *)a0 + 4;
 
-    if (!WillCommandOfSizeFitInSav1Record(r4, sQuestLogEventCmdSizes[QL_EVENT_2]))
+    if (!QuestLogSavWriteBoundsCheck(r4, sQuestLogEventCmdSizes[QL_EVENT_2]))
         return NULL;
     if (a1->command == 0)
         r4[0] = 2;
@@ -730,7 +730,7 @@ u16 *sub_8113D94(u16 *a0, struct QuestLogEntry * a1)
     u16 *r5 = a0;
     u8 *r6 = (u8 *)a0 + 4;
 
-    if (!WillCommandOfSizeFitInSav1Record(r5, sQuestLogEventCmdSizes[QL_EVENT_2]))
+    if (!QuestLogSavWriteBoundsCheck(r5, sQuestLogEventCmdSizes[QL_EVENT_2]))
         return NULL;
     if (r5[0] == 2)
         a1->command = 0;
@@ -755,7 +755,7 @@ u16 *sub_8113DE0(u16 eventId, u16 *a1)
         cmdSize = sQuestLogEventCmdSizes[eventId];
     else
         cmdSize = sQuestLogEventCmdSizes[eventId] - 4;
-    if (!sub_8110944(a1, cmdSize))
+    if (!QuestLogSavReadBoundsCheck(a1, cmdSize))
         return NULL;
 
     r5 = (void *)a1;
@@ -1020,7 +1020,7 @@ static u16 *BufferQuestLogData_UsedPkmnCenter(u16 *a0, const u16 *eventData)
     if (gUnknown_203B044.id == QL_EVENT_USED_PKMN_CENTER && gUnknown_203B044.unk_1 != 0)
         return r4;
 
-    if (!sub_8110944(a0, sQuestLogEventCmdSizes[QL_EVENT_USED_PKMN_CENTER]))
+    if (!QuestLogSavReadBoundsCheck(a0, sQuestLogEventCmdSizes[QL_EVENT_USED_PKMN_CENTER]))
         return NULL;
 
     r4[0] = QL_EVENT_USED_PKMN_CENTER;
@@ -1518,7 +1518,7 @@ static u16 *BufferQuestLogData_DefeatedWildMon(u16 *a0, const u16 *eventData)
 {
     u16 *r4 = a0;
     u8 *r5 = (u8 *)a0 + 8;
-    if (!sub_8110944(r4, sQuestLogEventCmdSizes[QL_EVENT_DEFEATED_WILD_MON]))
+    if (!QuestLogSavReadBoundsCheck(r4, sQuestLogEventCmdSizes[QL_EVENT_DEFEATED_WILD_MON]))
         return NULL;
     if (r5[0] == 0 && r5[1] == 0)
     {
@@ -1540,7 +1540,7 @@ static u16 *BufferQuestLogData_DefeatedWildMon(u16 *a0, const u16 *eventData)
 static const u16 *BufferQuestLogText_DefeatedWildMon(const u16 *a0)
 {
     const u8 *data;
-    if (!sub_8110944(a0, sQuestLogEventCmdSizes[QL_EVENT_DEFEATED_WILD_MON]))
+    if (!QuestLogSavReadBoundsCheck(a0, sQuestLogEventCmdSizes[QL_EVENT_DEFEATED_WILD_MON]))
         return NULL;
 
     data = (const u8 *)a0 + 8;
@@ -1624,7 +1624,7 @@ static const u16 *BufferQuestLogText_DefeatedEliteFourMember(const u16 *eventDat
 
 static u16 *BufferQuestLogData_DefeatedChampion(u16 *a0, const u16 *eventData)
 {
-    if (!sub_8110944(a0, sQuestLogEventCmdSizes[QL_EVENT_DEFEATED_CHAMPION]))
+    if (!QuestLogSavReadBoundsCheck(a0, sQuestLogEventCmdSizes[QL_EVENT_DEFEATED_CHAMPION]))
         return NULL;
     a0[0] = QL_EVENT_DEFEATED_CHAMPION | (2 << 12);
     a0[1] = sQuestLogCursor;
@@ -1638,7 +1638,7 @@ static u16 *BufferQuestLogData_DefeatedChampion(u16 *a0, const u16 *eventData)
 static const u16 *BufferQuestLogText_DefeatedChampion(const u16 *a0)
 {
     const u8 *r5;
-    if (!sub_8110944(a0, sQuestLogEventCmdSizes[QL_EVENT_DEFEATED_CHAMPION]))
+    if (!QuestLogSavReadBoundsCheck(a0, sQuestLogEventCmdSizes[QL_EVENT_DEFEATED_CHAMPION]))
         return NULL;
 
     r5 = (const u8 *)a0 + 8;

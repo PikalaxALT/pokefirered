@@ -80,11 +80,24 @@ CartIdent:
 	.4byte      0x838
 	.4byte      0x839
 	.4byte      0x182
-	.4byte  0xA0A0A07
-	.4byte  0xC060C0C
-	.4byte  0xC121006
-	.4byte  0x8010B0F
-	.4byte        0xC
+	.byte        0x07
+	.byte        0x0A
+	.byte        0x0A
+	.byte        0x0A @ POKEMON_NAME_LENGTH
+	.byte        0x0C
+	.byte        0x0C
+	.byte        0x06
+	.byte        0x0C
+	.byte        0x06
+	.byte        0x10
+	.byte        0x12
+	.byte        0x0C
+	.byte        0x0F
+	.byte        0x0B
+	.byte        0x01
+	.byte        0x08
+	.byte        0x0C
+	.align          2
 	.4byte      0xF24 @ sizeof(struct SaveBlock2)
 	.4byte     0x3D68 @ sizeof(struct SaveBlock1)
 	.4byte       0x34 @ offsetof(struct SaveBlock1, playerPartyCount)
@@ -96,8 +109,8 @@ CartIdent:
 
 	.4byte       0xAD @ offsetof(struct SaveBlock2, ?????? (0xAD))
 	.4byte       0xAD @ offsetof(struct SaveBlock2, ?????? (0xAD))
-	.4byte     0x30BB
-	.4byte     0x30A7
+	.4byte     0x30BB @ offsetof(struct SaveBlock1, externalEventFlags)
+	.4byte     0x30A7 @ offsetof(struct SaveBlock1, externalEventData)
 	.4byte          0
 	.4byte  gBaseStats
 	.4byte  gAbilityNames
@@ -107,15 +120,15 @@ CartIdent:
 	.4byte  gBallSpriteSheets
 	.4byte  gBallSpritePalettes
 	.4byte       0xA8
-	.4byte      0x82C
+	.4byte      0x82C @ Game clear flag
 	.4byte      0x83B
 	.4byte 0x3A0D1E2A
 	.4byte     0x1E2B
-	.4byte      0x298 @ offsetof(struct SaveBlock1, pcItems)  // maybe all items were in a struct together?
+	.4byte      0x298 @ offsetof(struct SaveBlock1, pcItems)
 	.4byte     0x309C @ offsetof(struct SaveBlock1, giftRibbons)
 	.4byte     0x30EC @ offsetof(struct SaveBlock1, enigmaBerry)
-	.4byte       0x34 @ size of SaveBlock1 map header reconstruction data?
-	.4byte          0
+	.4byte       0x34 @ sizeof(struct EnigmaBerry)
+	.4byte          0 @ move descriptions
 	.4byte 0xFFFFFFFF
 
 	.arm

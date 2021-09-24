@@ -101,7 +101,7 @@ static void QLPlayback_InitOverworldState(void);
 static void QuestLog_GetSaneMonCounts(void);
 static u16 QuestLog_GetSanePartyCount(void);
 static u16 QuestLog_GetSaneBoxCount(void);
-static void sub_8111688(void);
+static void RestoreRematchesFromVars(void);
 static void ReadQuestLogScriptFromSav1(u8, struct QuestLogEntry *);
 static void QuestLog_BeginFadeAtEndOfScene(s8 delay);
 static void QuestLog_AdvancePlayhead(void);
@@ -204,7 +204,7 @@ void RunQuestLogCB(void)
         sQuestLogCB();
 }
 
-bool8 sub_8110944(const void * a0, size_t cmdSize)
+bool8 QuestLogSavReadBoundsCheck(const void * a0, size_t cmdSize)
 {
     void * r2 = gSaveBlock1Ptr->questLog[sCurrentSceneNum].script;
     void * r0 = gSaveBlock1Ptr->questLog[sCurrentSceneNum].end;
@@ -214,7 +214,7 @@ bool8 sub_8110944(const void * a0, size_t cmdSize)
     return TRUE;
 }
 
-bool8 WillCommandOfSizeFitInSav1Record(u16 *cursor, size_t size)
+bool8 QuestLogSavWriteBoundsCheck(u16 *cursor, size_t size)
 {
     void * start = gSaveBlock1Ptr->questLog[sCurrentSceneNum].script;
     void * end = gSaveBlock1Ptr->questLog[sCurrentSceneNum].end;
@@ -585,7 +585,7 @@ void sub_81113E4(void)
 
     CpuCopy16(questLog->flags, gSaveBlock1Ptr->flags, NUM_FLAG_BYTES * sizeof(u8));
     CpuCopy16(questLog->vars, gSaveBlock1Ptr->vars, VARS_COUNT * sizeof(u16));
-    sub_8111688();
+    RestoreRematchesFromVars();
 }
 
 struct PokemonAndSomethingElse
@@ -705,7 +705,7 @@ static u16 QuestLog_GetSaneBoxCount(void)
     return count;
 }
 
-static void sub_8111688(void)
+static void RestoreRematchesFromVars(void)
 {
     u16 i, j;
     u16 sp0[4];
@@ -725,7 +725,7 @@ static void sub_8111688(void)
     }
 }
 
-void sub_8111708(void)
+void RestoreMapLayoutFromVar(void)
 {
     struct MapHeader sp0;
 
