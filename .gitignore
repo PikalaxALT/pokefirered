@@ -61,3 +61,6 @@ prefabs.json
 .vscode/*.*
 *.js
 *.sym
+.cache
+build-cmake-*
+compile_commands.json

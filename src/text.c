@@ -98,9 +98,9 @@ struct
 const u8 gKeypadIconTiles[] = INCBIN_U8("graphics/fonts/keypad_icons.4bpp");
 
 static const u16 sFontSmallLatinGlyphs[] = INCBIN_U16("graphics/fonts/latin_small.latfont");
-static const u8 sFontSmallLatinGlyphWidths[] = 
+static const u8 sFontSmallLatinGlyphWidths[] =
 {
-     5,  5,  5,  5,  5,  5,  5,  5,  5,  4,  5,  4,  4,  5, 
+     5,  5,  5,  5,  5,  5,  5,  5,  5,  4,  5,  4,  4,  5,
      5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,
      5,  5,  4,  5,  4,  4,  5,  5,  5,  6,  5,  5,  5,  5,
      5,  5,  8,  7,  8,  5,  5,  5,  5,  5,  8,  8,  7,  5,
@@ -291,7 +291,7 @@ static const u8 sFontMaleLatinGlyphWidths[] =
      8,  8,  8,  8,  8,  8,  8,  6
 };
 static const u16 sFontMaleJapaneseGlyphs[] = INCBIN_U16("graphics/fonts/japanese_male.fwjpnfont");
-static const u8 sFontMaleJapaneseGlyphWidths[] = 
+static const u8 sFontMaleJapaneseGlyphWidths[] =
 {
      0, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
     10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
@@ -557,7 +557,7 @@ bool16 TextPrinterWaitWithDownArrow(struct TextPrinter *textPrinter)
     else
     {
         TextPrinterDrawDownArrow(textPrinter);
-        if (JOY_NEW(A_BUTTON | B_BUTTON))
+        if ((gSaveBlock2Ptr->optionsTurboA && JOY_HELD(A_BUTTON)) || JOY_NEW(A_BUTTON | B_BUTTON))
         {
             result = TRUE;
             PlaySE(SE_SELECT);
@@ -575,7 +575,7 @@ bool16 TextPrinterWait(struct TextPrinter *textPrinter)
     }
     else
     {
-        if (JOY_NEW(A_BUTTON | B_BUTTON))
+        if ((gSaveBlock2Ptr->optionsTurboA && JOY_HELD(A_BUTTON)) || JOY_NEW(A_BUTTON | B_BUTTON))
         {
             result = TRUE;
             PlaySE(SE_SELECT);
@@ -881,7 +881,7 @@ u16 RenderText(struct TextPrinter *textPrinter)
     case RENDER_STATE_SCROLL:
         if (textPrinter->scrollDistance)
         {
-    
+
             if (textPrinter->scrollDistance < sWindowVerticalScrollSpeeds[gSaveBlock2Ptr->optionsTextSpeed])
             {
                 ScrollWindow(textPrinter->printerTemplate.windowId, 0, textPrinter->scrollDistance, PIXEL_FILL(textPrinter->printerTemplate.bgColor));
@@ -1064,6 +1064,9 @@ s32 GetStringWidth(u8 fontId, const u8 *str, s16 letterSpacing)
                     break;
                 case PLACEHOLDER_ID_STRING_VAR_3:
                     bufferPointer = gStringVar3;
+                    break;
+                case PLACEHOLDER_ID_STRING_VAR_4:
+                    bufferPointer = gStringVar4;
                     break;
                 default:
                     return 0;
@@ -1678,7 +1681,7 @@ static s32 GetGlyphWidth_Female(u16 glyphId, bool32 isJapanese)
     {
         if (glyphId == 0)
             return 10;
-        
+
         return sFontFemaleJapaneseGlyphWidths[glyphId];
     }
     else

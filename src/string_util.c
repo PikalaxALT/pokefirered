@@ -123,6 +123,48 @@ u8 *StringAppendN(u8 *dest, const u8 *src, u8 n)
     return StringCopyN(dest, src, n);
 }
 
+u8 *StringAppendHandleNewlines(u8 *dest, const u8 *src)
+{
+    u8 r6;
+    u8 r5;
+
+    r6 = 0;
+    r5 = EOS;
+    while (*dest != EOS)
+    {
+        dest++;
+    }
+
+    while (*src != EOS)
+    {
+        if (*src != CHAR_NEWLINE)
+        {
+            *dest = *src;
+            r5 = *src;
+            dest++;
+        }
+        else
+        {
+            if (r6 & 1)
+            {
+                *dest = CHAR_NEWLINE;
+                r5 = CHAR_NEWLINE;
+                dest++;
+            }
+            else if (r5 != CHAR_HYPHEN)
+            {
+                *dest = CHAR_SPACE;
+                r5 = CHAR_SPACE;
+                dest++;
+            }
+            r6++;
+        }
+        src++;
+    }
+    *dest = EOS;
+    return dest;
+}
+
 u16 StringLength(const u8 *str)
 {
     u16 length = 0;
@@ -166,6 +208,14 @@ u8 *ConvertIntToDecimalStringN(u8 *dest, s32 value, enum StringConvertMode mode,
     enum { WAITING_FOR_NONZERO_DIGIT, WRITING_DIGITS, WRITING_SPACES } state;
     s32 powerOfTen;
     s32 largestPowerOfTen = sPowersOfTen[n - 1];
+    bool32 isNegative;
+
+    isNegative = FALSE;
+    if (value < 0)
+    {
+        isNegative = TRUE;
+        value = -value;
+    }
 
     state = WAITING_FOR_NONZERO_DIGIT;
 
@@ -185,6 +235,12 @@ u8 *ConvertIntToDecimalStringN(u8 *dest, s32 value, enum StringConvertMode mode,
         if (state == WRITING_DIGITS)
         {
             out = dest++;
+            if (isNegative)
+            {
+                isNegative = FALSE;
+                *out = CHAR_HYPHEN;
+                out = dest++;
+            }
 
             if (digit <= 9)
                 c = sDigits[digit];
@@ -197,6 +253,12 @@ u8 *ConvertIntToDecimalStringN(u8 *dest, s32 value, enum StringConvertMode mode,
         {
             state = WRITING_DIGITS;
             out = dest++;
+            if (isNegative)
+            {
+                isNegative = FALSE;
+                *out = CHAR_HYPHEN;
+                out = dest++;
+            }
 
             if (digit <= 9)
                 c = sDigits[digit];
@@ -379,6 +441,11 @@ static u8 *ExpandPlaceholder_StringVar3(void)
     return gStringVar3;
 }
 
+static u8 *ExpandPlaceholder_StringVar4(void)
+{
+    return gStringVar4;
+}
+
 static u8 *ExpandPlaceholder_KunChan(void)
 {
     if (gSaveBlock2Ptr->playerGender == MALE)
@@ -476,6 +543,7 @@ u8 *GetExpandedPlaceholder(u32 id)
         [PLACEHOLDER_ID_STRING_VAR_1] = ExpandPlaceholder_StringVar1,
         [PLACEHOLDER_ID_STRING_VAR_2] = ExpandPlaceholder_StringVar2,
         [PLACEHOLDER_ID_STRING_VAR_3] = ExpandPlaceholder_StringVar3,
+        [PLACEHOLDER_ID_STRING_VAR_4] = ExpandPlaceholder_StringVar4,
         [PLACEHOLDER_ID_KUN]          = ExpandPlaceholder_KunChan,
         [PLACEHOLDER_ID_RIVAL]        = ExpandPlaceholder_RivalName,
         [PLACEHOLDER_ID_VERSION]      = ExpandPlaceholder_Version,

@@ -17,6 +17,7 @@ u8 *StringCopy(u8 *dest, const u8 *src);
 u8 *StringAppend(u8 *dest, const u8 *src);
 u8 *StringCopyN(u8 *dest, const u8 *src, u8 n);
 u8 *StringAppendN(u8 *dest, const u8 *src, u8 n);
+u8 *StringAppendHandleNewlines(u8 *dest, const u8 *src);
 u16 StringLength(const u8 *str);
 s32 StringCompare(const u8 *str1, const u8 *str2);
 s32 StringCompareN(const u8 *str1, const u8 *str2, u32 n);

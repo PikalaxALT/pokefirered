@@ -3007,7 +3007,7 @@ u8 IsRunningFromBattleImpossible(void)
         holdEffect = ItemId_GetHoldEffect(gBattleMons[gActiveBattler].item);
     gPotentialItemEffectBattler = gActiveBattler;
     if (holdEffect == HOLD_EFFECT_CAN_ALWAYS_RUN
-     || (gBattleTypeFlags & BATTLE_TYPE_LINK)
+     || (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_GHOST | BATTLE_TYPE_UNK_20))
      || gBattleMons[gActiveBattler].ability == ABILITY_RUN_AWAY)
         return BATTLE_RUN_SUCCESS;
     side = GetBattlerSide(gActiveBattler);
@@ -3755,6 +3755,10 @@ static void HandleEndTurn_BattleWon(void)
             break;
         }
     }
+    else if (gBattleTypeFlags & BATTLE_TYPE_UNK_20)
+    {
+        gBattlescriptCurrInstr = BattleScript_LocalTrainerBattleWon;
+    }
     else
     {
         gBattlescriptCurrInstr = BattleScript_PayDayMoneyAndPickUpItems;
@@ -3923,7 +3927,7 @@ static void ReturnFromBattleToOverworld(void)
         if (gBattleTypeFlags & BATTLE_TYPE_ROAMER)
         {
             UpdateRoamerHPStatus(&gEnemyParty[0]);
-#ifdef BUGFIX
+#if 1
             if ((gBattleOutcome == B_OUTCOME_WON) || gBattleOutcome == B_OUTCOME_CAUGHT)
 #else
             if ((gBattleOutcome & B_OUTCOME_WON) || gBattleOutcome == B_OUTCOME_CAUGHT) // Bug: When Roar is used by roamer, gBattleOutcome is B_OUTCOME_PLAYER_TELEPORTED (5).
@@ -4175,11 +4179,15 @@ static void HandleAction_UseItem(void)
         case AI_ITEM_HEAL_HP:
             break;
         case AI_ITEM_CURE_CONDITION:
-            gBattleCommunication[MULTISTRING_CHOOSER] = 0;
+            gBattleCommunication[MULTISTRING_CHOOSER] = AI_HEAL_CONFUSION;
             if (*(gBattleStruct->AI_itemFlags + gBattlerAttacker / 2) & 1)
             {
-                if (*(gBattleStruct->AI_itemFlags + gBattlerAttacker / 2) & 0x3E)
-                    gBattleCommunication[MULTISTRING_CHOOSER] = 5;
+                if (*(gBattleStruct->AI_itemFlags + gBattlerAttacker / 2) & ((1 << AI_HEAL_PARALYSIS)
+                | (1 << AI_HEAL_FREEZE)
+                | (1 << AI_HEAL_BURN)
+                | (1 << AI_HEAL_POISON)
+                | (1 << AI_HEAL_SLEEP)))
+                    gBattleCommunication[MULTISTRING_CHOOSER] = AI_HEAL_SLEEP;
             }
             else
             {
@@ -4191,10 +4199,10 @@ static void HandleAction_UseItem(void)
             }
             break;
         case AI_ITEM_X_STAT:
-            gBattleCommunication[MULTISTRING_CHOOSER] = 4;
-            if (*(gBattleStruct->AI_itemFlags + (gBattlerAttacker >> 1)) & 0x80)
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STAT_ROSE_ITEM;
+            if (*(gBattleStruct->AI_itemFlags + (gBattlerAttacker >> 1)) & (1 << AI_DIRE_HIT))
             {
-                gBattleCommunication[MULTISTRING_CHOOSER] = 5;
+                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_USED_DIRE_HIT;
             }
             else
             {
@@ -4205,15 +4213,24 @@ static void HandleAction_UseItem(void)
                     *(gBattleStruct->AI_itemFlags + gBattlerAttacker / 2) >>= 1;
                     ++gBattleTextBuff1[2];
                 }
-                gBattleScripting.animArg1 = gBattleTextBuff1[2] + 14;
+                gBattleScripting.animArg1 = gBattleTextBuff1[2] + STAT_ANIM_PLUS1;
                 gBattleScripting.animArg2 = 0;
             }
             break;
         case AI_ITEM_GUARD_SPECS:
+            // It seems probable that at some point there was a special message for
+            // an AI trainer using Guard Spec in a double battle.
+            // There isn't now however, and the assignment to 2 below goes out of
+            // bounds for gMistUsedStringIds and instead prints "{mon} is getting pumped"
+            // from the next table, gFocusEnergyUsedStringIds.
+            // In any case this isn't an issue in the retail version, as no trainers
+            // are ever given any Guard Spec to use.
+#ifndef UBFIX
             if (gBattleTypeFlags & BATTLE_TYPE_DOUBLE)
                 gBattleCommunication[MULTISTRING_CHOOSER] = 2;
             else
-                gBattleCommunication[MULTISTRING_CHOOSER] = 0;
+#endif
+                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_MIST;
             break;
         }
 

@@ -4,7 +4,7 @@ if [ "$1" == "firered" ] || [ "$1" == "leafgreen" ] || [ "$1" == "firered_rev1" 
   buildname="$1"
   shift
 else
-  buildname=firered
+  buildname=firered_rev1
 fi
 
 if [ "$buildname" == "firered" ]; then
@@ -20,8 +20,11 @@ else
   exit 1
 fi
 
+start=${1:-0}
+size=${2:-16777216}
+
 OBJDUMP="$DEVKITARM/bin/arm-none-eabi-objdump -D -bbinary -marmv4t -Mforce-thumb"
-OPTIONS="--start-address=$(($1)) --stop-address=$(($1 + $2))"
+OPTIONS="--start-address=$((start)) --stop-address=$((start + size))"
 $OBJDUMP $OPTIONS ${baserom}.gba > ${baserom}.dump || exit 1
 $OBJDUMP $OPTIONS poke${buildname}.gba > poke${buildname}.dump
 diff -u ${baserom}.dump poke${buildname}.dump

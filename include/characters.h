@@ -269,15 +269,16 @@
 #define PLACEHOLDER_ID_STRING_VAR_1  0x2
 #define PLACEHOLDER_ID_STRING_VAR_2  0x3
 #define PLACEHOLDER_ID_STRING_VAR_3  0x4
-#define PLACEHOLDER_ID_KUN           0x5
-#define PLACEHOLDER_ID_RIVAL         0x6
-#define PLACEHOLDER_ID_VERSION       0x7
-#define PLACEHOLDER_ID_MAGMA         0x8
-#define PLACEHOLDER_ID_AQUA          0x9
-#define PLACEHOLDER_ID_MAXIE         0xA
-#define PLACEHOLDER_ID_ARCHIE        0xB
-#define PLACEHOLDER_ID_GROUDON       0xC
-#define PLACEHOLDER_ID_KYOGRE        0xD
+#define PLACEHOLDER_ID_STRING_VAR_4  0x5
+#define PLACEHOLDER_ID_KUN           0x6
+#define PLACEHOLDER_ID_RIVAL         0x7
+#define PLACEHOLDER_ID_VERSION       0x8
+#define PLACEHOLDER_ID_MAGMA         0x9
+#define PLACEHOLDER_ID_AQUA          0xA
+#define PLACEHOLDER_ID_MAXIE         0xB
+#define PLACEHOLDER_ID_ARCHIE        0xC
+#define PLACEHOLDER_ID_GROUDON       0xD
+#define PLACEHOLDER_ID_KYOGRE        0xE
 
 // Note that while all dot combinations are represented in
 // the Braille font, they are not all meaningful characters.

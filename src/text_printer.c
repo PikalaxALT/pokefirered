@@ -96,7 +96,7 @@ bool16 AddTextPrinter(struct TextPrinterTemplate *textSubPrinter, u8 speed, void
     else
     {
         sTempTextPrinter.textSpeed = 0;
-        
+
         // Render all text (up to limit) at once
         for (j = 0; j < 0x400; ++j)
         {
@@ -115,24 +115,39 @@ bool16 AddTextPrinter(struct TextPrinterTemplate *textSubPrinter, u8 speed, void
 void RunTextPrinters(void)
 {
     int i;
+    int r3;
+    u8 state;
 
-    for (i = 0; i < NUM_TEXT_PRINTERS; ++i)
-    {
-        if (sTextPrinters[i].active)
+    while (TRUE) {
+        r3 = 0;
+        for (i = 0; i < NUM_TEXT_PRINTERS; ++i)
         {
-            u16 renderCmd = RenderFont(&sTextPrinters[i]);
-            switch (renderCmd)
+            if (sTextPrinters[i].active)
             {
-            case RENDER_PRINT:
-                CopyWindowToVram(sTextPrinters[i].printerTemplate.windowId, COPYWIN_GFX);
-            case RENDER_UPDATE:
-                if (sTextPrinters[i].callback != NULL)
-                    sTextPrinters[i].callback(&sTextPrinters[i].printerTemplate, renderCmd);
-                break;
-            case RENDER_FINISH:
-                sTextPrinters[i].active = FALSE;
-                break;
+                u16 renderCmd = RenderFont(&sTextPrinters[i]);
+                state = sTextPrinters[i].state;
+                switch (renderCmd)
+                {
+                case RENDER_PRINT:
+                    CopyWindowToVram(sTextPrinters[i].printerTemplate.windowId, COPYWIN_GFX);
+                case RENDER_UPDATE:
+                    if (sTextPrinters[i].callback != NULL)
+                        sTextPrinters[i].callback(&sTextPrinters[i].printerTemplate, renderCmd);
+                    if (state != RENDER_STATE_HANDLE_CHAR)
+                    {
+                        r3 = 32;
+                    }
+                    break;
+                case RENDER_FINISH:
+                    sTextPrinters[i].active = FALSE;
+                    break;
+                }
+            } else {
+                ++r3;
             }
+        }
+        if (r3 >= 32 || gSaveBlock2Ptr->optionsTextSpeed == 3) {
+            break;
         }
     }
 }
@@ -238,7 +253,7 @@ void CopyGlyphToWindow(struct TextPrinter *textPrinter)
 {
     int glyphWidth, glyphHeight;
     u8 sizeType;
-    
+
     if (gWindows[textPrinter->printerTemplate.windowId].window.width * 8 - textPrinter->printerTemplate.currentX < gGlyphInfo.width)
         glyphWidth = gWindows[textPrinter->printerTemplate.windowId].window.width * 8 - textPrinter->printerTemplate.currentX;
     else
@@ -253,7 +268,7 @@ void CopyGlyphToWindow(struct TextPrinter *textPrinter)
         sizeType |= 1;
     if (glyphHeight > 8)
         sizeType |= 2;
-    
+
     switch (sizeType)
     {
         case 0: // ≤ 8x8
@@ -282,7 +297,7 @@ static void CopyGlyphToWindow_Parameterized(void *tileData, u16 currentX, u16 cu
     int glyphWidth, glyphHeight;
     u8 sizeType;
     u16 sizeX;
-    
+
     if (width - currentX < gGlyphInfo.width)
         glyphWidth = width - currentX;
     else
@@ -291,14 +306,14 @@ static void CopyGlyphToWindow_Parameterized(void *tileData, u16 currentX, u16 cu
         glyphHeight = height - currentY;
     else
         glyphHeight = gGlyphInfo.height;
-    
+
     sizeType = 0;
     sizeX  = (width + (width & 7)) >> 3;
     if (glyphWidth > 8)
         sizeType |= 1;
     if (glyphHeight > 8)
         sizeType |= 2;
-    
+
     switch (sizeType)
     {
         case 0:

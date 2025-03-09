@@ -847,6 +847,7 @@ static void Cmd_attackcanceler(void)
 
     if (!(gHitMarker & HITMARKER_OBEYS) && !(gBattleMons[gBattlerAttacker].status2 & STATUS2_MULTIPLETURNS))
     {
+        #if 0
         i = IsMonDisobedient(); // why use the 'i' variable...?
         switch (i)
         {
@@ -859,6 +860,9 @@ static void Cmd_attackcanceler(void)
             gMoveResultFlags |= MOVE_RESULT_MISSED;
             return;
         }
+        #else
+        ++i;--i;
+        #endif
     }
 
     gHitMarker |= HITMARKER_OBEYS;
@@ -1461,7 +1465,14 @@ u8 TypeCalc(u16 move, u8 attacker, u8 defender)
     if (move == MOVE_STRUGGLE)
         return 0;
 
-    moveType = gBattleMoves[move].type;
+    if (gBattleStruct->dynamicMoveType != 0)
+    {
+        moveType = gBattleStruct->dynamicMoveType & 0x3F;
+    }
+    else
+    {
+        moveType = gBattleMoves[move].type;
+    }
 
     // check stab
     if (IS_BATTLER_OF_TYPE(attacker, moveType))
@@ -1520,7 +1531,14 @@ u8 AI_TypeCalc(u16 move, u16 targetSpecies, u8 targetAbility)
     if (move == MOVE_STRUGGLE)
         return 0;
 
-    moveType = gBattleMoves[move].type;
+    if (gBattleStruct->dynamicMoveType != 0)
+    {
+        moveType = gBattleStruct->dynamicMoveType & 0x3F;
+    }
+    else
+    {
+        moveType = gBattleMoves[move].type;
+    }
 
     if (targetAbility == ABILITY_LEVITATE && moveType == TYPE_GROUND)
     {
@@ -3424,7 +3442,7 @@ static void Cmd_checkteamslost(void)
         {
             u32 *ptr = &gHitMarker;
             u32 hitMarkerUnk = 0x10000000;
-            
+
             i++;
             --i;
             if ((hitMarkerUnk << i) & *ptr && !gSpecialStatuses[i].faintedHasReplacement)
@@ -3434,7 +3452,7 @@ static void Cmd_checkteamslost(void)
         {
             u32 *ptr = &gHitMarker;
             u32 hitMarkerUnk = 0x10000000;
-            
+
             {
                 u8 match;
 
@@ -5206,7 +5224,7 @@ static void Cmd_yesnoboxlearnmove(void)
             else
             {
                 u16 moveId = GetMonData(&gPlayerParty[gBattleStruct->expGetterMonId], MON_DATA_MOVE1 + movePosition);
-                
+
                 if (IsHMMove2(moveId))
                 {
                     PrepareStringBattle(STRINGID_HMMOVESCANTBEFORGOTTEN, gActiveBattler);
@@ -5338,28 +5356,28 @@ static void Cmd_getmoneyreward(void)
             case 0:
                 {
                     const struct TrainerMonNoItemDefaultMoves *party1 = gTrainers[gTrainerBattleOpponent_A].party.NoItemDefaultMoves;
-                    
+
                     lastMonLevel = party1[gTrainers[gTrainerBattleOpponent_A].partySize - 1].lvl;
                 }
                 break;
             case F_TRAINER_PARTY_CUSTOM_MOVESET:
                 {
                     const struct TrainerMonNoItemCustomMoves *party2 = gTrainers[gTrainerBattleOpponent_A].party.NoItemCustomMoves;
-                    
+
                     lastMonLevel = party2[gTrainers[gTrainerBattleOpponent_A].partySize - 1].lvl;
                 }
                 break;
             case F_TRAINER_PARTY_HELD_ITEM:
                 {
                     const struct TrainerMonItemDefaultMoves *party3 = gTrainers[gTrainerBattleOpponent_A].party.ItemDefaultMoves;
-                    
+
                     lastMonLevel = party3[gTrainers[gTrainerBattleOpponent_A].partySize - 1].lvl;
                 }
                 break;
             case (F_TRAINER_PARTY_CUSTOM_MOVESET | F_TRAINER_PARTY_HELD_ITEM):
                 {
                     party4 = gTrainers[gTrainerBattleOpponent_A].party.ItemCustomMoves;
-                    
+
                     lastMonLevel = party4[gTrainers[gTrainerBattleOpponent_A].partySize - 1].lvl;
                 }
                 break;
